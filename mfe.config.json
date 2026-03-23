@@ -1,0 +1,30 @@
+{
+  "name": "crm",
+  "packageManager": "pnpm",
+  "shared": {
+    "ui": true,
+    "utils": true,
+    "state": true,
+    "auth": false,
+    "reactQuery": true,
+    "shadcn": true
+  },
+  "modules": [
+    {
+      "name": "dashboard",
+      "port": 3001,
+      "type": "feature",
+      "exposes": {
+        "./App": "./src/App.tsx"
+      }
+    },
+    {
+      "name": "auth",
+      "port": 3002,
+      "type": "feature",
+      "exposes": {
+        "./App": "./src/App.tsx"
+      }
+    }
+  ]
+}
