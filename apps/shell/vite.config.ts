@@ -9,13 +9,13 @@ import federation from '@originjs/vite-plugin-federation';
 //   Terminal 2: pnpm run dev:shell     (vite dev for the shell)
 //
 // For production, set environment variables:
-//   VITE_DASHBOARD_URL=https://dashboard.netlify.app
+//   VITE_MAIN_URL=https://main.netlify.app
 //   VITE_PROFILE_URL=https://profile.netlify.app
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   const remotes = {
-    'dashboard': env.VITE_DASHBOARD_URL ? `${env.VITE_DASHBOARD_URL}/assets/remoteEntry.js` : 'http://localhost:3001/assets/remoteEntry.js',
+    'main': env.VITE_MAIN_URL ? `${env.VITE_MAIN_URL}/assets/remoteEntry.js` : 'http://localhost:3001/assets/remoteEntry.js',
     'auth': env.VITE_AUTH_URL ? `${env.VITE_AUTH_URL}/assets/remoteEntry.js` : 'http://localhost:3002/assets/remoteEntry.js',
   };
 
@@ -34,6 +34,7 @@ export default defineConfig(({ mode }) => {
           '@crm/ui': { singleton: true },
           '@crm/utils': { singleton: true },
           '@crm/store': { singleton: true },
+          recharts: { singleton: true, requiredVersion: '^3.0.0' },
         },
       }),
     ],

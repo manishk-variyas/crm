@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-declare module 'dashboard/App' {
+declare module 'main/App' {
   const App: React.ComponentType;
   export default App;
 }

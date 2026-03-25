@@ -14,7 +14,12 @@ export const useStore = create<RootStore>()(
       }),
       {
         name: 'mfe-store',
-        partialize: (state) => ({ theme: state.theme }),
+        partialize: (state) => ({ 
+          theme: state.theme,
+          accentColor: state.accentColor,
+          fontSize: state.fontSize,
+          fontFamily: state.fontFamily
+        }),
       }
     ),
     { name: 'MFE Store' }

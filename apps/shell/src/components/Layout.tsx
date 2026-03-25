@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar, Header, SidebarMenuItem } from '@crm/ui';
+import { useStore, RootStore } from '@crm/store';
 import {
   Building2,
   CheckSquare,
@@ -19,14 +20,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
+  
+  const { 
+    sidebarOpen, 
+    setSidebarOpen, 
+    toggleSidebar 
+  } = useStore((state: RootStore) => ({
+    sidebarOpen: state.sidebarOpen,
+    setSidebarOpen: state.setSidebarOpen,
+    toggleSidebar: state.toggleSidebar,
+  }));
+
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const menuItems: SidebarMenuItem[] = [
     { label: 'Dashboard', icon: LayoutDashboard, value: '/dashboard', href: '/dashboard' },
     { label: 'Opportunities', icon: Users, value: '/opportunities', href: '/opportunities' },
     { label: 'Accounts', icon: Building2, value: '/accounts', href: '/accounts' },
-    { label: 'Contacts', icon: Contact, value: '/contacts', href: '/contacts' },
+    { label: 'Customer Contacts', icon: Contact, value: '/contacts', href: '/contacts' },
+    { label: 'Employee Directory', icon: Users, value: '/directory', href: '/directory' },
     { label: 'Sales Pipeline', icon: BarChart3, value: '/pipeline', href: '/pipeline' },
     { label: 'Quotes', icon: FileText, value: '/quotes', href: '/quotes' },
     { label: 'Tasks', icon: CheckSquare, value: '/tasks', href: '/tasks' },
@@ -43,28 +55,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 overflow-hidden text-slate-900 font-sans relative">
-      {isSidebarOpen && (
+    <div className="flex h-screen w-full bg-background overflow-hidden text-foreground font-sans relative">
+      {isMobileOpen && (
         <div
           className="fixed inset-0 bg-slate-900/50 z-40 xl:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       <div className={`
         fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out xl:relative xl:translate-x-0
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <Sidebar
           companyInitials="E"
           companyName="Enterprise CRM"
           menuItems={menuItems}
           activeItem={activeItem}
-          isCollapsed={isDesktopCollapsed}
+          isCollapsed={!sidebarOpen}
           user={user}
           onItemClick={(item) => {
             navigate(item.href || '/');
-            setIsSidebarOpen(false);
+            setIsMobileOpen(false);
           }}
           onLogout={() => console.log("Logout triggered")}
         />
@@ -75,14 +87,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           notificationCount={1}
-          onMenuClick={() => setIsSidebarOpen(true)}
+          onMenuClick={() => setIsMobileOpen(true)}
           rightElement={
             <button
-              onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
+              onClick={toggleSidebar}
               className="hidden xl:flex p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors mr-1"
-              title={isDesktopCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+              title={!sidebarOpen ? "Expand Sidebar" : "Collapse Sidebar"}
             >
-              {isDesktopCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+              {!sidebarOpen ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
             </button>
           }
         />

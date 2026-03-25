@@ -1,0 +1,31 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Dashboard } from './pages/Dashboard';
+import { Settings } from './pages/Settings';
+import { Accounts } from './pages/Accounts';
+import { Contacts } from './pages/Contacts';
+import { Employees } from './pages/Employees';
+import { Opportunities } from './pages/Opportunities';
+import { Quotes } from './pages/Quotes';
+import { SalesPipeline } from './pages/SalesPipeline';
+import { Tasks } from './pages/Tasks';
+import { Reports } from './pages/Reports';
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/opportunities" element={<Opportunities />} />
+      <Route path="/accounts" element={<Accounts />} />
+      <Route path="/contacts" element={<Contacts />} />
+      <Route path="/directory" element={<Employees />} />
+      <Route path="/pipeline" element={<SalesPipeline />} />
+      <Route path="/quotes" element={<Quotes />} />
+      <Route path="/tasks" element={<Tasks />} />
+      <Route path="/reports" element={<Reports />} />
+      <Route path="/settings" element={<Settings />} />
+    </Routes>
+  );
+}
+
+export default App;

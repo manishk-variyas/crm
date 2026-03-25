@@ -10,7 +10,8 @@
     "clsx": "^2.1.0",
     "lucide-react": "^0.363.0",
     "recharts": "^3.8.0",
-    "tailwind-merge": "^2.2.0"
+    "tailwind-merge": "^2.2.0",
+    "@crm/store": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0",

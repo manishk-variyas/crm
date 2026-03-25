@@ -37,7 +37,15 @@ export function DonutChart({
             ))}
           </Pie>
           <Tooltip 
-            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '14px' }}
+            contentStyle={{ 
+              backgroundColor: 'hsl(var(--card))', 
+              borderRadius: '12px', 
+              border: '1px solid hsl(var(--border))', 
+              boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+              fontSize: '12px',
+              color: 'hsl(var(--foreground))'
+            }}
+            itemStyle={{ color: 'hsl(var(--foreground))' }}
           />
         </PieChart>
       </ResponsiveContainer>

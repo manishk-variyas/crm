@@ -10,31 +10,31 @@ export function UpcomingTasks() {
   ];
 
   return (
-    <Card className="shadow-sm border-slate-200 h-full">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4">
+    <Card className="shadow-sm h-full">
+      <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
         <CardTitle className="text-base font-semibold">Upcoming Tasks</CardTitle>
-        <span className="text-blue-600 text-sm font-medium cursor-pointer hover:underline">View All</span>
+        <span className="text-primary text-sm font-medium cursor-pointer hover:underline">View All</span>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="flex flex-col gap-3">
           {tasks.map((item, idx) => (
-            <div key={idx} className="flex items-center justify-between p-3 border border-slate-100 rounded-lg hover:border-slate-300 transition-colors">
+            <div key={idx} className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-border transition-colors">
               <div className="flex items-center gap-4">
                 <input 
                   type="checkbox" 
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" 
+                  className="w-4 h-4 rounded border-border text-primary focus:ring-primary" 
                   defaultChecked={item.checked} 
                 />
                 <div>
-                  <p className={`text-sm font-medium ${item.checked ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                  <p className={`text-sm font-medium ${item.checked ? 'line-through text-muted-foreground/50' : 'text-foreground/90'}`}>
                     {item.text}
                   </p>
-                  <p className="text-xs text-slate-400 mt-1">
-                    {item.date} • <span className="text-slate-500">{item.priority}</span>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {item.date} • <span className="text-muted-foreground/70">{item.priority}</span>
                   </p>
                 </div>
               </div>
-              <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600 shrink-0 border border-slate-200">
+              <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground shrink-0 border border-border">
                 {item.user}
               </div>
             </div>

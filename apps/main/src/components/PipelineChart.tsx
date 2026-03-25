@@ -14,10 +14,10 @@ export function PipelineChart() {
   ];
 
   return (
-    <Card className="shadow-sm border-slate-200 h-full">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4">
+    <Card className="shadow-sm border-border h-full">
+      <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
         <CardTitle className="text-base font-semibold">Pipeline Distribution</CardTitle>
-        <div className="text-slate-400 font-bold tracking-wider leading-none">...</div>
+        <div className="text-muted-foreground/50 font-bold tracking-wider leading-none">...</div>
       </CardHeader>
       <CardContent className="pt-6 flex flex-col justify-between">
         <div className="relative">
@@ -28,9 +28,9 @@ export function PipelineChart() {
             <div key={idx} className="flex items-center justify-between text-xs py-1">
               <div className="flex items-center gap-2">
                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                 <span className="text-slate-600 font-medium">{item.name}</span>
+                 <span className="text-muted-foreground font-medium">{item.name}</span>
               </div>
-              <span className="font-semibold text-slate-800">{item.value}</span>
+              <span className="font-semibold text-foreground">{item.value}</span>
             </div>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, Search, Bell, HelpCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Input } from './input';
 
 export interface HeaderProps {
   className?: string;
@@ -28,28 +29,25 @@ export const Header: React.FC<HeaderProps> = ({
   rightElement
 }) => {
   return (
-    <header className={cn("flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200 shrink-0", className)}>
+    <header className={cn("flex items-center justify-between h-16 px-6 bg-background border-b border-border/50 shrink-0", className)}>
       <div className="flex items-center gap-4 flex-1 min-w-0">
         {onMenuClick && (
           <button 
             onClick={onMenuClick}
-            className="p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-md xl:hidden shrink-0"
+            className="p-2 -ml-2 text-muted-foreground hover:bg-muted rounded-md xl:hidden shrink-0"
           >
             <Menu className="w-5 h-5" />
           </button>
         )}
         
         {showSearch && (
-          <div className="relative w-full max-w-md hidden sm:block">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-              <Search className="w-4 h-4" />
-            </div>
-            <input
-              type="text"
+          <div className="w-full max-w-md hidden sm:block">
+            <Input 
+              icon={<Search />}
               value={searchQuery}
               onChange={(e) => onSearchChange?.(e.target.value)}
-              className="w-full h-9 pl-9 pr-4 text-sm bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
               placeholder={searchPlaceholder}
+              className="h-10 text-sm bg-muted/20 border-border/40"
             />
           </div>
         )}
@@ -60,11 +58,11 @@ export const Header: React.FC<HeaderProps> = ({
         
         <button 
           onClick={onNotificationClick}
-          className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+          className="relative p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors"
         >
           <Bell className="w-5 h-5" />
           {notificationCount > 0 && (
-            <span className="absolute top-1 right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full border border-white">
+            <span className="absolute top-1 right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full border border-background">
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>
           )}
@@ -72,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
         
         <button 
           onClick={onHelpClick}
-          className="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+          className="p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors"
         >
           <HelpCircle className="w-5 h-5" />
         </button>

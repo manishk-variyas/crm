@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'dashboard',
+      name: 'main',
       filename: 'remoteEntry.js',
       exposes: {
         './App': './src/App.tsx',
@@ -20,6 +20,7 @@ export default defineConfig({
       '@crm/ui': { singleton: true },
       '@crm/utils': { singleton: true },
       '@crm/store': { singleton: true },
+      recharts: { singleton: true, requiredVersion: '^3.0.0' },
       },
     }),
   ],

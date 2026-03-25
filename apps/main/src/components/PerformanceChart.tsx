@@ -13,10 +13,10 @@ export function PerformanceChart() {
   ];
 
   return (
-    <Card className="shadow-sm border-slate-200 h-full">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4">
+    <Card className="shadow-sm border-border h-full">
+      <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
         <CardTitle className="text-base font-semibold">My Performance vs Quota</CardTitle>
-        <div className="text-slate-400 font-bold tracking-wider leading-none">...</div>
+        <div className="text-muted-foreground/50 font-bold tracking-wider leading-none">...</div>
       </CardHeader>
       <CardContent className="pt-6">
         <BarChart 

@@ -1,13 +1,11 @@
+import { PageHeader } from '../components/PageHeader';
+import { SalesTargets } from '../components/SalesTargets';
+import { PerformanceChart } from '../components/PerformanceChart';
+import { PipelineChart } from '../components/PipelineChart';
+import { RecentActivity } from '../components/RecentActivity';
+import { UpcomingTasks } from '../components/UpcomingTasks';
 
-import React from 'react';
-import { PageHeader } from './components/PageHeader';
-import { SalesTargets } from './components/SalesTargets';
-import { PerformanceChart } from './components/PerformanceChart';
-import { PipelineChart } from './components/PipelineChart';
-import { RecentActivity } from './components/RecentActivity';
-import { UpcomingTasks } from './components/UpcomingTasks';
-
-function App() {
+export function Dashboard() {
   return (
     <div className="w-full max-w-[1400px] mx-auto">
       <PageHeader />
@@ -29,5 +27,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
