@@ -1,3 +1,9 @@
+/**
+ * useFetch Hook - Simple async data fetching with loading and error states
+ * Handles request lifecycle including cleanup on unmount
+ * @param url - API endpoint to fetch from
+ * @returns Object with data, loading state, and error
+ */
 import { useState, useEffect } from 'react';
 
 interface FetchState<T> {

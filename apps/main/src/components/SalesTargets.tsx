@@ -1,3 +1,7 @@
+/**
+ * SalesTargets Component - Displays user's weekly, monthly, and quarterly targets
+ * Shows progress bars with achieved vs target amounts
+ */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@crm/ui';
 import { Target } from 'lucide-react';

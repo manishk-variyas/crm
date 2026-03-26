@@ -1,7 +1,13 @@
+/**
+ * Sidebar Component - Navigation sidebar for the CRM application
+ * Supports collapsible mode, user display, and navigation items
+ * Responsive design with mobile overlay support
+ */
 import React from 'react';
 import { LogOut } from 'lucide-react';
 import { cn } from '../lib/utils';
 
+/** Menu item structure for sidebar navigation */
 export interface SidebarMenuItem {
   label: string;
   icon: React.ElementType;
@@ -9,6 +15,7 @@ export interface SidebarMenuItem {
   href?: string;
 }
 
+/** User information structure */
 export interface SidebarUser {
   name: string;
   role: string;

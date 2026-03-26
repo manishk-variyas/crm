@@ -1,3 +1,7 @@
+/**
+ * UpcomingTasks Component - Displays pending tasks with priority and due dates
+ * Allows task completion via checkbox interactions
+ */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@crm/ui';
 

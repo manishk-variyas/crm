@@ -1,3 +1,8 @@
+/**
+ * Main Application - CRM Dashboard Routing Configuration
+ * Defines all application routes and their corresponding page components
+ * Redirects root path to dashboard as the default landing page
+ */
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Dashboard } from './pages/Dashboard';
 import { Settings } from './pages/Settings';

@@ -1,3 +1,7 @@
+/**
+ * RecentActivity Component - Displays chronological list of recent user actions
+ * Shows activity feed with user name, action, target, and timestamp
+ */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@crm/ui';
 

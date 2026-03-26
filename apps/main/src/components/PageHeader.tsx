@@ -1,3 +1,7 @@
+/**
+ * PageHeader Component - Welcome message and quick actions
+ * Displays user greeting with contextual action button
+ */
 import React from 'react';
 import { Button } from '@crm/ui';
 

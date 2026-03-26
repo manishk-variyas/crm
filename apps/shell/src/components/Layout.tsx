@@ -1,3 +1,8 @@
+/**
+ * Layout Component - Main application shell with sidebar and header
+ * Wraps page content with consistent navigation and layout structure
+ * Handles responsive sidebar behavior and mobile overlay
+ */
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar, Header, SidebarMenuItem } from '@crm/ui';

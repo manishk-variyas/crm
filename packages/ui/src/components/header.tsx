@@ -1,8 +1,13 @@
+/**
+ * Header Component - Top navigation bar with search, notifications, and actions
+ * Provides consistent header across all pages with customizable elements
+ */
 import React from 'react';
 import { Menu, Search, Bell, HelpCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Input } from './input';
 
+/** Header component props for customization */
 export interface HeaderProps {
   className?: string;
   onMenuClick?: () => void;

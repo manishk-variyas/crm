@@ -1,3 +1,7 @@
+/**
+ * Input Component - Styled text input with optional icon support
+ * Extends native HTML input with custom styling and focus states
+ */
 import * as React from 'react';
 import { cn } from '../lib/utils';
 

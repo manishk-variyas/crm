@@ -1,3 +1,7 @@
+/**
+ * Card Components - Container components for grouping related content
+ * Includes Card, CardHeader, CardTitle, and CardContent sub-components
+ */
 import * as React from 'react';
 import { cn } from '../lib/utils';
 

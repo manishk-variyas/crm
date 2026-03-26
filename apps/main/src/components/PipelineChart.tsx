@@ -1,3 +1,7 @@
+/**
+ * PipelineChart Component - Donut chart showing deal distribution by stage
+ * Visualizes opportunities across the sales pipeline stages
+ */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, DonutChart } from '@crm/ui';
 

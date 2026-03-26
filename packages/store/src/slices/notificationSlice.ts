@@ -1,5 +1,10 @@
+/**
+ * Notification Slice - Manages toast/alert notifications across the application
+ * Provides a queue-based system for displaying user feedback messages
+ */
 import { StateCreator } from 'zustand';
 
+/** Represents a single notification message */
 export interface Notification {
   id: string;
   message: string;
@@ -7,6 +12,7 @@ export interface Notification {
   duration?: number;
 }
 
+/** Interface defining notification state and actions */
 export interface NotificationSlice {
   notifications: Notification[];
   addNotification: (notification: Omit<Notification, 'id'>) => void;
@@ -14,6 +20,7 @@ export interface NotificationSlice {
   clearNotifications: () => void;
 }
 
+/** Creates the notification slice with default empty state and action implementations */
 export const createNotificationSlice: StateCreator<NotificationSlice> = (set) => ({
   notifications: [],
   addNotification: (notification) =>

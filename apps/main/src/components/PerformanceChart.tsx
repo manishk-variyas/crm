@@ -1,3 +1,7 @@
+/**
+ * PerformanceChart Component - Bar chart comparing revenue vs quota
+ * Visualizes monthly performance data for the current year
+ */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, BarChart } from '@crm/ui';
 

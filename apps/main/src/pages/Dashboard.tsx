@@ -1,3 +1,7 @@
+/**
+ * Dashboard Page - Main landing page showing sales performance overview
+ * Displays sales targets, performance charts, activity feed, and tasks
+ */
 import { PageHeader } from '../components/PageHeader';
 import { SalesTargets } from '../components/SalesTargets';
 import { PerformanceChart } from '../components/PerformanceChart';

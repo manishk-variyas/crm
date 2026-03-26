@@ -1,3 +1,10 @@
+/**
+ * useLocalStorage Hook - Manages state synchronized with browser localStorage
+ * Automatically persists and retrieves values across page reloads
+ * @param key - Unique key for localStorage item
+ * @param initialValue - Default value if key doesn't exist
+ * @returns Tuple of [stored value, setter function]
+ */
 import { useState, useEffect } from 'react';
 
 export function useLocalStorage<T>(key: string, initialValue: T) {

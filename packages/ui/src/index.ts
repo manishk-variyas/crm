@@ -1,3 +1,8 @@
+/**
+ * UI Package - Reusable UI components and theming utilities
+ * Entry point for @crm/ui module consumed by other applications
+ * Provides buttons, cards, inputs, charts, layout components, and theming
+ */
 export { Button } from './components/button';
 export type { ButtonProps } from './components/button';
 export { Card, CardHeader, CardTitle, CardContent } from './components/card';
