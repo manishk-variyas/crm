@@ -68,9 +68,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
       )}
 
+      {/* Static Fixed Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out xl:relative xl:translate-x-0
-        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
         <Sidebar
           companyInitials="E"
@@ -87,7 +88,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
       </div>
 
-      <div className="flex-1 flex flex-col min-w-0 h-screen">
+      {/* Main Content with dynamically adjusting margin to offset the fixed sidebar */}
+      <div className={`flex-1 flex flex-col min-w-0 h-screen transition-all duration-300 ease-in-out ${!sidebarOpen ? 'lg:ml-20' : 'lg:ml-64'}`}>
         <Header
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -96,7 +98,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           rightElement={
             <button
               onClick={toggleSidebar}
-              className="hidden xl:flex p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors mr-1"
+              className="hidden lg:flex p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors mr-1"
               title={!sidebarOpen ? "Expand Sidebar" : "Collapse Sidebar"}
             >
               {!sidebarOpen ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}

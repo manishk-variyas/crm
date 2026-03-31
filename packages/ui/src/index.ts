@@ -20,7 +20,7 @@ export type { HeaderProps } from './components/header';
 export { PageHeader } from './components/page-header';
 export type { PageHeaderProps } from './components/page-header';
 export { DataTable } from './components/data-table';
-export type { DataTableProps, Column } from './components/data-table';
+export type { DataTableProps, Column, SortOption, FilterConfig } from './components/data-table';
 export { BarChart } from './components/charts/bar-chart';
 export type { BarChartProps } from './components/charts/bar-chart';
 export { DonutChart } from './components/charts/donut-chart';
@@ -30,3 +30,4 @@ export { DealsByStage, PipelineByStage } from './components/charts/stage-charts'
 export { RevenueTrend, RevenueByVertical } from './components/charts/revenue-charts';
 export { RevenueForecast, ExportReports } from './components/charts/other-charts';
 export { ReportStatsCard } from './components/charts/report-stats-card';
+export * from './components/modal';
