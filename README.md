@@ -9,9 +9,9 @@ crm/
 ├── apps/
 │   ├── shell/          Host application (orchestrates all MFEs)
 │   ├── main/           Main CRM app - Dashboard, Accounts, Contacts, etc.
-│   └── auth/           Authentication - Login page
+│   └── auth/           Authentication - Login page (protected)
 ├── packages/
-│   ├── ui/             Shared UI components (Button, Card, Sidebar, Charts)
+│   ├── ui/             Shared UI components (Button, Card, Sidebar, Charts, Forms)
 │   ├── store/          Zustand global state (theme, sidebar, notifications)
 │   └── utils/          Shared hooks (useDebounce, useLocalStorage) & formatters
 └── docs/               Architecture & deployment documentation
@@ -23,12 +23,14 @@ crm/
 graph TB
     subgraph "Shell (3000)"
         S[Browser Router]
-        L[Layout]
+        L[Layout + Sidebar]
         T[Theme Provider]
+        P[Protected Routes]
     end
     
     S -->|/login| A[auth:3002]
-    S -->|/*| L
+    S -->|/*| P
+    P --> L
     L --> M[main:3001]
     
     M --> P1[ui package]
@@ -64,50 +66,73 @@ pnpm --filter @crm/main run serve  # preview
 
 ## Modules
 
-| App | Port | Routes |
-|-----|------|--------|
-| `@crm/shell` | 3000 | Host - serves all routes |
-| `@crm/main` | 3001 | `/dashboard`, `/accounts`, `/contacts`, `/opportunities`, `/pipeline`, `/quotes`, `/tasks`, `/reports`, `/settings`, `/directory` |
-| `@crm/auth` | 3002 | `/login` |
+| App | Port | Routes | Description |
+|-----|------|--------|-------------|
+| `@crm/shell` | 3000 | `/*` | Host - serves all routes, handles auth |
+| `@crm/main` | 3001 | `/dashboard`, `/accounts`, `/contacts`, `/opportunities`, `/pipeline`, `/quotes`, `/tasks`, `/reports`, `/settings`, `/directory` | Main CRM app |
+| `@crm/auth` | 3002 | `/login` | Login page (protected) |
+
+## Authentication
+
+**Private access only** - No public registration.
+
+### Login Credentials
+- **Email:** `admin@crm.com`
+- **Password:** `crm123`
+
+The auth system:
+- Validates credentials on login
+- Stores auth state in localStorage
+- Protects all routes except `/login`
+- Redirects unauthorized users to login
 
 ## Shared Packages
 
 | Package | Purpose | Exports |
 |---------|---------|---------|
-| `@crm/ui` | UI Components | Button, Card, Badge, Input, Sidebar, Header, Charts, `cn()` |
+| `@crm/ui` | UI Components | Button, Card, Badge, Input, Sidebar, Header, Charts, FormInput, FormSelect, Tabs, `cn()` |
 | `@crm/utils` | Hooks & Utils | useLocalStorage, useDebounce, useFetch, formatDate, formatCurrency |
 | `@crm/store` | State Management | useStore - theme, sidebar, notifications |
-
-## Adding a New Module
-
-```bash
-# Scaffold new feature module (manual setup required)
-mkdir apps/new-feature
-cd apps/new-feature
-pnpm create vite . --template react-ts
-```
-
-Then update `mfe.config.json` to register the new module.
 
 ## Build
 
 ```bash
 # Build all apps and packages
 pnpm build
+
+# Output in apps/*/dist
 ```
 
 ## Deployment
 
-See [docs/deployment-strategy.md](./docs/deployment-strategy.md) for deployment options.
+### Recommended: Sub-path Routing
 
-**Recommended**: Sub-path routing on single domain (`crm.company.com/*`)
+Deploy all apps under single domain:
+
+```
+crm.company.com/          -> Shell
+crm.company.com/login    -> Auth
+crm.company.com/dashboard -> Main
+```
+
+### Nginx Config
+
+See [docs/deployment/nginx-simple.conf](./docs/deployment/nginx-simple.conf) for simple nginx setup without Docker.
+
+```bash
+# Build
+pnpm build
+
+# Copy dist folders to server
+scp -r apps/shell/dist user@server:/var/www/crm-shell/
+scp -r apps/main/dist user@server:/var/www/crm-main/
+scp -r apps/auth/dist user@server:/var/www/crm-auth/
+
+# Copy nginx config and reload
+```
 
 ## Documentation
 
-- [Microfrontend Architecture](./docs/microfrontend-architecture.md) - Architecture overview and design decisions
+- [Microfrontend Architecture](./docs/microfrontend-architecture.md) - Architecture overview
 - [Deployment Strategy](./docs/deployment-strategy.md) - Deployment options comparison
-- [Deployment Process](./docs/deployment_process/) - Step-by-step deployment guides:
-  - [01 - Why Sub-paths](./docs/deployment_process/01-why-subpaths.md)
-  - [02 - Vite Configuration](./docs/deployment_process/02-vite-configuration.md)
-  - [03 - Unified Build](./docs/deployment_process/03-unified-build.md)
-  - [04 - Server Routing](./docs/deployment_process/04-server-routing.md)
+- [Nginx Config](./docs/deployment/nginx-simple.conf) - Simple nginx deployment
