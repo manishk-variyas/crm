@@ -13,7 +13,7 @@ import {
   Pencil,
   Trash2
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, DataTable, Column } from '@crm/ui';
+import { Button, Badge, cn, PageHeader, DataTable, Column, PageActions } from '@crm/ui';
 
 interface Quote {
   id: string;
@@ -135,16 +135,12 @@ export function Quotes() {
         title="Quotes"
         subtitle="Manage sales quotes and proposals."
         actions={
-          <>
-            <Button variant="outline" className="flex items-center gap-2 h-10">
-              <Download className="w-4 h-4" />
-              Export
-            </Button>
-            <Button className="flex items-center gap-2 h-10 shadow-sm active:scale-95 transition-all">
-              <Plus className="w-4 h-4" />
-              Create Quote
-            </Button>
-          </>
+          <PageActions
+            actions={[
+              { label: 'Export', variant: 'outline', icon: <Download className="w-4 h-4" />, onClick: () => {} },
+              { label: 'Create Quote', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => {} }
+            ]}
+          />
         }
       />
 

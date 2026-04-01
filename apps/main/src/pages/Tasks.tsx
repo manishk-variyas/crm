@@ -11,9 +11,10 @@ import {
   Calendar as CalendarIcon, 
   Share2, 
   AlertCircle,
-  MoreVertical
+  MoreVertical,
+  Plus
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, DataTable, Column } from '@crm/ui';
+import { Button, Badge, cn, PageHeader, DataTable, Column, PageActions } from '@crm/ui';
 
 interface Task {
   id: string;

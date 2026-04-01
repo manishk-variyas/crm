@@ -11,17 +11,15 @@ import {
   Building2,
   Calendar,
   MoreVertical,
-  Filter,
-  ArrowUpDown,
-  Search,
   X,
   Edit,
   Share2,
   CheckCircle,
-  Save
+  Save,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, Modal } from '@crm/ui';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, Modal, StatusBadge, getStatusVariant, PageActions, FormInput, FormSelect, FormTextarea, Tabs } from '@crm/ui';
 
 interface Opportunity {
   id: string;
@@ -212,17 +210,17 @@ function ActionMenu({ opportunity, onEdit }: { opportunity: Opportunity, onEdit:
           <div className="flex flex-col p-1.5 gap-0.5">
             <button 
               onClick={(e) => { e.stopPropagation(); setIsOpen(false); onEdit(opportunity); }}
-              className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-blue-600 hover:bg-blue-50/50 rounded-lg transition-colors w-full text-left group"
+              className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors w-full text-left group"
             >
-              <Edit className="w-4 h-4 text-muted-foreground group-hover:text-blue-600" />
+              <Edit className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
               Edit
             </button>
-            <button className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-blue-600 hover:bg-blue-50/50 rounded-lg transition-colors w-full text-left group">
-              <Share2 className="w-4 h-4 text-muted-foreground group-hover:text-blue-600" />
+            <button className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors w-full text-left group">
+              <Share2 className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
               Share
             </button>
-            <button className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-blue-600 hover:bg-blue-50/50 rounded-lg transition-colors w-full text-left group">
-              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-blue-600" />
+            <button className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors w-full text-left group">
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
               View
             </button>
           </div>
@@ -243,33 +241,21 @@ function OpportunityModal({ opportunity, onClose }: { opportunity?: Opportunity 
       title={isEditing ? 'Edit Opportunity' : 'Add New Opportunity'}
       description={isEditing ? 'Update the details for this sales opportunity.' : 'Enter the details for the new sales opportunity.'}
       tabs={
-        <>
-          <button 
-            onClick={() => setActiveTab('details')}
-            className={cn(
-              "py-3 text-[13px] font-bold transition-all border-b-[3px]",
-              activeTab === 'details' ? "text-primary border-primary" : "text-muted-foreground hover:text-foreground border-transparent"
-            )}
-          >
-            Opportunity Details
-          </button>
-          <button 
-            onClick={() => setActiveTab('tasks')}
-            className={cn(
-              "py-3 text-[13px] font-bold transition-all border-b-[3px]",
-              activeTab === 'tasks' ? "text-primary border-primary" : "text-muted-foreground hover:text-foreground border-transparent"
-            )}
-          >
-            Associated Tasks
-          </button>
-        </>
+        <Tabs
+          tabs={[
+            { id: 'details', label: 'Opportunity Details' },
+            { id: 'tasks', label: 'Associated Tasks' }
+          ]}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+        />
       }
       footer={
         <>
-          <Button variant="outline" onClick={onClose} className="h-10 px-5 font-semibold text-[13px]">
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={onClose} className="h-10 px-6 font-semibold bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 text-[13px] border-none shadow-md">
+          <Button onClick={onClose} className="flex items-center gap-2">
             <Save className="w-4 h-4" />
             {isEditing ? 'Update Deal' : 'Create Opportunity'}
           </Button>
@@ -281,144 +267,69 @@ function OpportunityModal({ opportunity, onClose }: { opportunity?: Opportunity 
           <div className="space-y-4">
             <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">General Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-              <div className="col-span-1 md:col-span-2 space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Opportunity Name</label>
-                <div className="relative">
-                  <Target className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
-                  <input 
-                    type="text" 
-                    defaultValue={opportunity?.name || ''} 
-                    placeholder="Unified Platform Expansion" 
-                    className="w-full h-10 pl-9 pr-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium" 
-                  />
-                </div>
+              <div className="col-span-1 md:col-span-2">
+                <FormInput
+                  label="Opportunity Name"
+                  defaultValue={opportunity?.name || ''}
+                  placeholder="Unified Platform Expansion"
+                  icon={<Target />}
+                />
               </div>
               
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Associated Account</label>
-                <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
-                  <select 
-                    defaultValue={opportunity?.account || ''} 
-                    className="w-full h-10 pl-9 pr-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium"
-                  >
-                    <option value="" disabled>Select an account</option>
-                    <option value="Cyberdyne Systems">Cyberdyne Systems</option>
-                    <option value="Massive Dynamic">Massive Dynamic</option>
-                    <option value="Umbrella Corporation">Umbrella Corporation</option>
-                    <option value="Wayne Enterprises">Wayne Enterprises</option>
-                    <option value="Stark Industries">Stark Industries</option>
-                  </select>
-                </div>
-              </div>
+              <FormSelect
+                label="Associated Account"
+                defaultValue={opportunity?.account || ''}
+                placeholder="Select an account"
+                options={[
+                  { value: 'Cyberdyne Systems', label: 'Cyberdyne Systems' },
+                  { value: 'Massive Dynamic', label: 'Massive Dynamic' },
+                  { value: 'Umbrella Corporation', label: 'Umbrella Corporation' },
+                  { value: 'Wayne Enterprises', label: 'Wayne Enterprises' },
+                  { value: 'Stark Industries', label: 'Stark Industries' },
+                ]}
+              />
 
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Sales Stage</label>
-                <select 
-                  defaultValue={opportunity?.stage || 'Qualification'} 
-                  className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium"
-                >
-                  <option value="Qualification">Qualification</option>
-                  <option value="Proposal">Proposal</option>
-                  <option value="Negotiation">Negotiation</option>
-                  <option value="Closed Won">Closed Won</option>
-                  <option value="Closed Lost">Closed Lost</option>
-                </select>
-              </div>
+              <FormSelect
+                label="Sales Stage"
+                defaultValue={opportunity?.stage || 'Qualification'}
+                options={[
+                  { value: 'Qualification', label: 'Qualification' },
+                  { value: 'Proposal', label: 'Proposal' },
+                  { value: 'Negotiation', label: 'Negotiation' },
+                  { value: 'Closed Won', label: 'Closed Won' },
+                  { value: 'Closed Lost', label: 'Closed Lost' },
+                ]}
+              />
 
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Deal Amount ($)</label>
-                <input 
-                  type="text" 
-                  defaultValue={opportunity?.amount || ''} 
-                  placeholder="450,000" 
-                  className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium" 
-                />
-              </div>
+              <FormInput
+                label="Deal Amount ($)"
+                defaultValue={opportunity?.amount || ''}
+                placeholder="450,000"
+              />
 
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Probability (%)</label>
-                <input 
-                  type="text" 
-                  defaultValue={opportunity?.probability.replace('%', '') || ''} 
-                  placeholder="80" 
-                  className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium" 
-                />
-              </div>
+              <FormInput
+                label="Probability (%)"
+                defaultValue={opportunity?.probability.replace('%', '') || ''}
+                placeholder="80"
+              />
 
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Expected Close Date</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
-                  <input 
-                    type="date" 
-                    defaultValue={opportunity ? new Date(opportunity.closeDate).toISOString().split('T')[0] : ''} 
-                    className="w-full h-10 pl-9 pr-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium" 
-                  />
-                </div>
-              </div>
+              <FormInput
+                label="Expected Close Date"
+                defaultValue={opportunity ? new Date(opportunity.closeDate).toISOString().split('T')[0] : ''}
+                type="date"
+              />
 
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Opportunity Owner</label>
-                <select 
-                  defaultValue="Alex Morgan" 
-                  className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium"
-                >
-                  <option value="Alex Morgan">Alex Morgan</option>
-                </select>
-              </div>
+              <FormSelect
+                label="Opportunity Owner"
+                defaultValue="Alex Morgan"
+                options={[
+                  { value: 'Alex Morgan', label: 'Alex Morgan' },
+                ]}
+              />
             </div>
           </div>
         </div>
-      ) : (
-        <div className="space-y-8 pb-4">
-          <div className="bg-muted/10 border border-border/50 rounded-xl p-5 space-y-6">
-            <div className="flex items-center gap-2 mb-2">
-              <Plus className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-bold text-foreground">Add Task</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-              <div className="col-span-1 md:col-span-2 space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Task Subject</label>
-                <input type="text" placeholder="Follow up call, Send proposal..." className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium" />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Due Date</label>
-                <input type="date" className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium" />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-foreground">Priority</label>
-                <select className="w-full h-10 px-3 rounded-lg border border-border bg-background hover:border-primary/50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[13px] font-medium">
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-            </div>
-            
-            <div className="flex justify-end pt-2">
-              <Button variant="outline" className="h-9 px-4 text-xs font-bold gap-2 text-primary border-primary/20 hover:bg-primary/5 border-dashed">
-                <Plus className="w-3.5 h-3.5" />
-                Add to Task List
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-foreground">Pending Tasks</h3>
-              <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">0 Tasks</Badge>
-            </div>
-            <div className="border-2 border-dashed border-border/60 rounded-xl p-10 flex flex-col items-center justify-center text-center space-y-3 bg-muted/5">
-              <div className="w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-muted-foreground/50" />
-              </div>
-              <p className="text-[13px] font-medium text-muted-foreground">No tasks associated with this opportunity.</p>
-            </div>
-          </div>
-        </div>
-      )}
+      ) : null}
     </Modal>
   );
 }
@@ -449,7 +360,7 @@ function OwnerProfileModal({ ownerName, onClose }: { ownerName: string, onClose:
     >
       <div className="space-y-8 py-2">
         <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold border-2 border-blue-50 shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold border-2 border-primary/20 shadow-sm">
             {owner.initials}
           </div>
           <div className="flex flex-col">
@@ -575,7 +486,7 @@ export function Opportunities() {
       header: 'Opportunity Name',
       render: (opp) => (
         <div className="flex items-center gap-4 text-left">
-          <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-100/50">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
             <Target className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
@@ -611,19 +522,10 @@ export function Opportunities() {
     {
       header: 'Stage',
       render: (opp) => (
-        <Badge 
-          variant="secondary" 
-          className={cn(
-            "font-bold px-3 py-1 border-none",
-            opp.stage === 'Closed Won'    && "bg-emerald-50 text-emerald-600",
-            opp.stage === 'Closed Lost'   && "bg-rose-50 text-rose-500",
-            opp.stage === 'Qualification' && "bg-muted text-muted-foreground",
-            opp.stage === 'Proposal'      && "bg-indigo-50 text-indigo-600",
-            opp.stage === 'Negotiation'   && "bg-amber-50 text-amber-600",
-          )}
-        >
-          {opp.stage}
-        </Badge>
+        <StatusBadge
+          status={opp.stage}
+          variant={getStatusVariant(opp.stage)}
+        />
       )
     },
     {
@@ -669,19 +571,12 @@ export function Opportunities() {
         title="Opportunities"
         subtitle="Track and manage your sales pipeline and ongoing deals."
         actions={
-          <>
-            <Button variant="outline" className="flex items-center gap-2 h-10 transition-all hover:bg-muted font-bold">
-              <Download className="w-4 h-4" />
-              Export
-            </Button>
-            <Button 
-              className="flex items-center gap-2 h-10 shadow-lg shadow-primary/20 active:scale-95 transition-all font-bold"
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <Plus className="w-4 h-4" />
-              Add Opportunity
-            </Button>
-          </>
+          <PageActions 
+            actions={[
+              { label: 'Export', onClick: () => {}, icon: <Download className="w-4 h-4" />, variant: 'outline' },
+              { label: 'Add Opportunity', onClick: () => setIsAddModalOpen(true), icon: <Plus className="w-4 h-4" />, variant: 'primary' }
+            ]}
+          />
         }
       />
 
