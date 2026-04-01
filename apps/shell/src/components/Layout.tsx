@@ -21,7 +21,7 @@ import {
   PanelLeftOpen
 } from 'lucide-react';
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children, onLogout }: { children: React.ReactNode; onLogout?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,7 +84,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             navigate(item.href || '/');
             setIsMobileOpen(false);
           }}
-          onLogout={() => console.log("Logout triggered")}
+          onLogout={() => onLogout ? onLogout() : () => {}}
         />
       </div>
 

@@ -6,19 +6,63 @@
  * 2. Module Federation (loading remote microfrontends)
  * 3. Theme provider (global styling)
  * 4. React Query (data fetching state)
+ * 5. Auth protection
  * 
  * Route Flow:
  * - /login -> Auth MFE (remote)
- * - /* -> Main MFE (remote) wrapped in Layout
+ * - /* -> Main MFE (remote) wrapped in Layout (protected)
  * - / -> Redirect to /dashboard
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Layout } from './components/Layout';
 import { PageLoader } from './components/PageLoader';
 import { ThemeProvider } from '@crm/ui';
+
+/**
+ * Auth check helper
+ */
+function checkAuth(): boolean {
+  const auth = localStorage.getItem('crm_auth');
+  if (!auth) return false;
+  try {
+    const data = JSON.parse(auth);
+    return data.isAuthenticated === true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * ProtectedRoute - Redirects to login if not authenticated
+ */
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setIsAuthenticated(checkAuth());
+  }, []);
+
+  if (isAuthenticated === null) {
+    return <PageLoader />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+/**
+ * Logout handler
+ */
+function handleLogout() {
+  localStorage.removeItem('crm_auth');
+  window.location.href = '/login';
+}
 
 /**
  * Lazy-loaded remote microfrontends
@@ -44,26 +88,30 @@ export default function App() {
             <Route
               path="/login"
               element={
-                <React.Suspense fallback={<PageLoader />}>
-                  <Auth />
-                </React.Suspense>
+                checkAuth() ? <Navigate to="/dashboard" replace /> : (
+                  <React.Suspense fallback={<PageLoader />}>
+                    <Auth />
+                  </React.Suspense>
+                )
               }
             />
             <Route
               path="/*"
               element={
-                <Layout>
-                  <Routes>
-                    <Route
-                      path="/*"
-                      element={
-                        <React.Suspense fallback={<PageLoader />}>
-                          <MainApp />
-                        </React.Suspense>
-                      }
-                    />
-                  </Routes>
-                </Layout>
+                <ProtectedRoute>
+                  <Layout onLogout={handleLogout}>
+                    <Routes>
+                      <Route
+                        path="/*"
+                        element={
+                          <React.Suspense fallback={<PageLoader />}>
+                            <MainApp />
+                          </React.Suspense>
+                        }
+                      />
+                    </Routes>
+                  </Layout>
+                </ProtectedRoute>
               }
             />
           </Routes>

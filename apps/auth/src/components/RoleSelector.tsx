@@ -21,7 +21,7 @@ export function RoleSelector({ role, setRole }: RoleSelectorProps) {
 
   return (
     <div className="mb-6">
-      <label className="block text-sm font-semibold text-slate-700 mb-3">Select Role (Demo)</label>
+      <label className="block text-sm font-semibold text-foreground mb-3">Select Role (Demo)</label>
       <div className="grid grid-cols-4 gap-2">
         {roles.map((r) => {
           const isSelected = r.id === role;
@@ -32,11 +32,11 @@ export function RoleSelector({ role, setRole }: RoleSelectorProps) {
               onClick={() => setRole(r.id)}
               className={`flex flex-col items-center justify-center border rounded-lg py-3 px-1 transition-all ${
                 isSelected 
-                  ? 'border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]' 
-                  : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-primary bg-primary/10 text-primary' 
+                  : 'border-border text-muted-foreground hover:border-muted-foreground hover:bg-muted/30'
               }`}
             >
-              <Icon className={`w-[22px] h-[22px] mb-1.5 ${isSelected ? 'text-[#4f46e5]' : 'text-slate-500'}`} strokeWidth={1.5} />
+              <Icon className={`w-[22px] h-[22px] mb-1.5 ${isSelected ? 'text-primary' : 'text-muted-foreground'}`} strokeWidth={1.5} />
               <span className="text-[11px] font-medium text-center tracking-tight">{r.id}</span>
             </button>
           );
