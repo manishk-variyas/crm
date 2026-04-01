@@ -1,3 +1,7 @@
+/**
+ * AuthHeader - Company branding and sign-in page title
+ * Displays logo, heading, and trial link
+ */
 import React from 'react';
 
 export function AuthHeader() {

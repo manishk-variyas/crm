@@ -1,3 +1,8 @@
+/**
+ * Settings Page - User preferences and app configuration
+ * Theme customization, profile settings, display options
+ * @route /settings
+ */
 import React, { useState } from 'react';
 import { Save, User, Palette, Sun, Moon, ChevronDown, Check, Camera, Phone, Monitor, MapPin } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, cn, applyTheme, Input } from '@crm/ui';

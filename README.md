@@ -1,88 +1,113 @@
-# crm
+# CRM - Enterprise Customer Relationship Management
 
-Microfrontend monorepo scaffolded with [create-mfe](https://github.com/your-org/create-mfe).
+Microfrontend monorepo built with **Vite Module Federation** (`@originjs/vite-plugin-federation`).
 
 ## Architecture
-
-This workspace uses **Vite Module Federation** (`@originjs/vite-plugin-federation`) so each
-module is developed, built, and deployed independently while sharing a single React instance.
 
 ```
 crm/
 ├── apps/
-│   ├── shell/          Host application (port 3000)
-│   └── dashboard/         Feature module (port 3001)
+│   ├── shell/          Host application (orchestrates all MFEs)
+│   ├── main/           Main CRM app - Dashboard, Accounts, Contacts, etc.
+│   └── auth/           Authentication - Login page
 ├── packages/
-│   ├── ui/             Shared shadcn/ui components
-│   ├── utils/          Shared hooks & helpers
-│   ├── store/          Zustand global state
-│   └── auth/           Auth context & route guards
-└── mfe.config.json     CLI workspace manifest
+│   ├── ui/             Shared UI components (Button, Card, Sidebar, Charts)
+│   ├── store/          Zustand global state (theme, sidebar, notifications)
+│   └── utils/          Shared hooks (useDebounce, useLocalStorage) & formatters
+└── docs/               Architecture & deployment documentation
 ```
 
-## Getting started
+### Microfrontend Structure
+
+```mermaid
+graph TB
+    subgraph "Shell (3000)"
+        S[Browser Router]
+        L[Layout]
+        T[Theme Provider]
+    end
+    
+    S -->|/login| A[auth:3002]
+    S -->|/*| L
+    L --> M[main:3001]
+    
+    M --> P1[ui package]
+    M --> P2[store package]
+    M --> P3[utils package]
+    L --> P1
+    L --> P2
+```
+
+## Quick Start
 
 ```bash
+# Install dependencies
 pnpm install
-```
 
-> **Why 3 terminals?**
-> [`@originjs/vite-plugin-federation`](https://github.com/originjs/vite-plugin-federation) does not
-> support Vite's HMR dev server for **remote** apps — `remoteEntry.js` is only emitted after a build.
-> Remotes must be built and served via `vite preview`.
-
-```bash
-# Terminal 1 — watch-build all remote modules on every file change
+# Start development (3 terminals)
+# Terminal 1: Build remotes with watch mode
 pnpm dev:remotes
 
-# Terminal 2 — serve the built remotes (run AFTER Terminal 1 has finished its first build)
+# Terminal 2: Serve built remotes
 pnpm serve:remotes
 
-# Terminal 3 — shell app with full HMR
+# Terminal 3: Shell with HMR
 pnpm dev:shell
 ```
 
-Or start apps individually:
-
+Or run individually:
 ```bash
 pnpm --filter @crm/shell run dev
-pnpm --filter @crm/<module-name> run dev   # watch build
-pnpm --filter @crm/<module-name> run serve  # preview
+pnpm --filter @crm/main run dev    # watch build
+pnpm --filter @crm/main run serve  # preview
 ```
 
 ## Modules
 
-| Path | Package | Port | Type |
-|------|---------|------|------|
-| `apps/shell` | `@crm/shell` | 3000 | Host (shell) |
-| `apps/dashboard` | `@crm/dashboard` | 3001 | Feature module |
+| App | Port | Routes |
+|-----|------|--------|
+| `@crm/shell` | 3000 | Host - serves all routes |
+| `@crm/main` | 3001 | `/dashboard`, `/accounts`, `/contacts`, `/opportunities`, `/pipeline`, `/quotes`, `/tasks`, `/reports`, `/settings`, `/directory` |
+| `@crm/auth` | 3002 | `/login` |
 
-## Adding a new module
+## Shared Packages
 
-```bash
-create-mfe add my-new-module
-```
+| Package | Purpose | Exports |
+|---------|---------|---------|
+| `@crm/ui` | UI Components | Button, Card, Badge, Input, Sidebar, Header, Charts, `cn()` |
+| `@crm/utils` | Hooks & Utils | useLocalStorage, useDebounce, useFetch, formatDate, formatCurrency |
+| `@crm/store` | State Management | useStore - theme, sidebar, notifications |
 
-This will:
-1. Scaffold `apps/my-new-module/` with vite.config, tsconfig, and source files
-2. Register it in `mfe.config.json`
-3. Print the remote entry URL to paste into the shell's `vite.config.ts`
-
-## Shared packages
-
-| Package | What it exports |
-|---------|----------------|
-| `@crm/ui` | Button, Card, Badge and the `cn()` utility |
-| `@crm/utils` | `useLocalStorage`, `useDebounce`, `useFetch`, format helpers |
-| `@crm/store` | `useStore` — Zustand store with UI + notification slices |
-| `@crm/auth` | `AuthProvider`, `useAuth`, `ProtectedRoute` |
-
-## Build & deploy
-
-Each app builds to its own `dist/` folder and can be deployed to any static host.
-The shell fetches remote entry files at runtime, so modules can be deployed independently.
+## Adding a New Module
 
 ```bash
-pnpm build       # build all apps & packages
+# Scaffold new feature module (manual setup required)
+mkdir apps/new-feature
+cd apps/new-feature
+pnpm create vite . --template react-ts
 ```
-# crm
+
+Then update `mfe.config.json` to register the new module.
+
+## Build
+
+```bash
+# Build all apps and packages
+pnpm build
+```
+
+## Deployment
+
+See [docs/deployment-strategy.md](./docs/deployment-strategy.md) for deployment options.
+
+**Recommended**: Sub-path routing on single domain (`crm.company.com/*`)
+
+## Documentation
+
+- [Microfrontend Architecture](./docs/microfrontend-architecture.md) - Architecture overview and design decisions
+- [Deployment Strategy](./docs/deployment-strategy.md) - Deployment options comparison
+- [Deployment Process](./docs/deployment_process/) - Step-by-step deployment guides:
+  - [01 - Why Sub-paths](./docs/deployment_process/01-why-subpaths.md)
+  - [02 - Vite Configuration](./docs/deployment_process/02-vite-configuration.md)
+  - [03 - Unified Build](./docs/deployment_process/03-unified-build.md)
+  - [04 - Server Routing](./docs/deployment_process/04-server-routing.md)

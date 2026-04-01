@@ -1,3 +1,8 @@
+/**
+ * Tasks Page - Task/activity management
+ * View and manage user tasks and to-dos
+ * @route /tasks
+ */
 import React, { useState } from 'react';
 import { 
   CheckCircle2, 

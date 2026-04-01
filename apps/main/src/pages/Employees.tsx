@@ -1,3 +1,8 @@
+/**
+ * Employees Page - Employee directory
+ * Internal employee/team member listings
+ * @route /directory
+ */
 import React, { useState } from 'react';
 import { 
   Mail, 

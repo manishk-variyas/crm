@@ -1,3 +1,8 @@
+/**
+ * Contacts Page - Individual contact management
+ * Manages customer/prospect contacts linked to accounts
+ * @route /contacts
+ */
 import React, { useState } from 'react';
 import { 
   Building2, 

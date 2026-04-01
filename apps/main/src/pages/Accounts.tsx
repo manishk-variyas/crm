@@ -1,3 +1,8 @@
+/**
+ * Accounts Page - Company/business account management
+ * Lists all accounts with search, filters, and CRUD operations
+ * @route /accounts
+ */
 import React, { useState } from 'react';
 import { 
   Building2, 

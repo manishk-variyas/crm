@@ -1,3 +1,8 @@
+/**
+ * RoleSelector - Demo role selection for login
+ * Allows switching between Sales Rep, Manager, Executive, Admin
+ * Used to demonstrate different user perspectives in the CRM
+ */
 import React from 'react';
 import { User, Briefcase, TrendingUp, ShieldCheck } from 'lucide-react';
 

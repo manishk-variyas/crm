@@ -1,3 +1,8 @@
+/**
+ * ThemeProvider - Wraps application with theme management
+ * Subscribes to @crm/store for theme preferences and applies them to document
+ * Handles light/dark mode, accent colors, font size, and font family
+ */
 import React, { useEffect } from 'react';
 import { useStore, RootStore } from '@crm/store';
 import { applyTheme } from '../lib/theme-manager';

@@ -1,3 +1,7 @@
+/**
+ * LoginForm - Email/password authentication form
+ * Contains email input, password input, remember me, and forgot password
+ */
 import React from 'react';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 

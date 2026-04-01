@@ -1,3 +1,7 @@
+/**
+ * PageLoader - Loading fallback for lazy-loaded microfrontends
+ * Displayed while Module Federation remotes are being loaded
+ */
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 

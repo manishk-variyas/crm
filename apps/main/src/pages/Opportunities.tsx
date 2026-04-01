@@ -1,3 +1,8 @@
+/**
+ * Opportunities Page - Sales deal/opportunity management
+ * Tracks potential deals through various stages
+ * @route /opportunities
+ */
 import React, { useState } from 'react';
 import { 
   Plus, 

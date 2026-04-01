@@ -1,3 +1,8 @@
+/**
+ * Sales Pipeline Page - Visual pipeline view
+ * Kanban-style board showing deals by stage
+ * @route /pipeline
+ */
 import React, { useState } from 'react';
 import { 
   Plus, 

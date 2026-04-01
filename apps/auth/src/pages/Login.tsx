@@ -1,3 +1,8 @@
+/**
+ * Login Page - Main authentication entry point
+ * Displays role selector, login form, and demo credentials
+ * @returns Login component with role selection and form
+ */
 import React, { useState } from 'react';
 import { Card, CardContent } from '@crm/ui';
 import { AuthHeader } from '../components/AuthHeader';

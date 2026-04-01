@@ -1,5 +1,11 @@
+/**
+ * Theme Manager - Dynamic theming for the CRM application
+ * Manages accent colors, font sizes, font families, and dark/light mode
+ * Used by ThemeProvider to apply CSS variables based on store state
+ */
 import { AccentColor, FontFamily, FontSize, ThemeMode } from '@crm/store';
 
+/** Accent color configurations (HSL values for CSS variables) */
 export const accentColors: Record<AccentColor, { primary: string; ring: string; foreground: string }> = {
   indigo: { primary: '239 84% 67%', ring: '239 84% 67%', foreground: '0 0% 100%' },
   blue: { primary: '221 83% 53%', ring: '221 83% 53%', foreground: '0 0% 100%' },
@@ -9,6 +15,7 @@ export const accentColors: Record<AccentColor, { primary: string; ring: string; 
   slate: { primary: '215 25% 27%', ring: '215 25% 27%', foreground: '0 0% 100%' },
 };
 
+/** Font size mappings to pixel values */
 export const fontSizes: Record<FontSize, string> = {
   small: '14px',
   medium: '16px',
@@ -22,6 +29,14 @@ interface ThemeSettings {
   fontFamily: FontFamily;
 }
 
+/**
+ * Applies theme settings to the document root
+ * Sets CSS custom properties for dynamic styling
+ * @param theme - Theme mode: 'light', 'dark', or 'system'
+ * @param accentColor - Selected accent color
+ * @param fontSize - Font size preference
+ * @param fontFamily - Font family preference
+ */
 export function applyTheme({ theme, accentColor, fontSize, fontFamily }: ThemeSettings) {
   const root = document.documentElement;
   

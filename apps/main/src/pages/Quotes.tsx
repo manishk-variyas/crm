@@ -1,3 +1,8 @@
+/**
+ * Quotes Page - Quote/proposal management
+ * Create and manage quotes for prospects
+ * @route /quotes
+ */
 import React, { useState } from 'react';
 import { 
   FileText, 

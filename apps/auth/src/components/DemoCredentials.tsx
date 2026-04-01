@@ -1,3 +1,7 @@
+/**
+ * DemoCredentials - Displays demo login instructions
+ * Shows that any email/password works for demo purposes
+ */
 import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 

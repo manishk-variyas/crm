@@ -1,3 +1,8 @@
+/**
+ * Reports Page - Analytics and reporting dashboard
+ * Revenue charts, conversion funnels, pipeline metrics
+ * @route /reports
+ */
 import React from 'react';
 import { 
   DollarSign, 
