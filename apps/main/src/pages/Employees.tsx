@@ -113,6 +113,26 @@ const EMPLOYEES: Employee[] = [
 
 export function Employees() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [alphabetLetter, setAlphabetLetter] = useState('');
+
+  const filteredData = EMPLOYEES.filter((employee) => {
+    const matchesSearch = !searchTerm ||
+      employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesAlphabet = !alphabetLetter || employee.name.toUpperCase().startsWith(alphabetLetter);
+
+    return matchesSearch && matchesAlphabet;
+  });
+
+  const hasActiveFilters = !!searchTerm || !!alphabetLetter;
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setAlphabetLetter('');
+  };
 
   const columns: Column<Employee>[] = [
     {
@@ -175,15 +195,21 @@ export function Employees() {
       />
 
       <DataTable 
-        data={EMPLOYEES}
+        data={filteredData}
         columns={columns}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+        onClearFilters={clearFilters}
+        hasActiveFilters={hasActiveFilters}
+        alphabetFilter={{
+          value: alphabetLetter,
+          onChange: setAlphabetLetter
+        }}
         searchPlaceholder="Search by name, title, department, or email..."
         pagination={{
           currentPage: 1,
           totalPages: 1,
-          totalResults: 7,
+          totalResults: filteredData.length,
           resultsPerPage: 10,
           onPageChange: (page) => console.log('Page change:', page)
         }}

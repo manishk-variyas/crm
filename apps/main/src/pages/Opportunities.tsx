@@ -400,6 +400,7 @@ export function Opportunities() {
   const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [viewingOwner, setViewingOwner] = useState<string | null>(null);
+  const [alphabetLetter, setAlphabetLetter] = useState('');
 
   const hasActiveFilters =
     (activeFilters.stage && activeFilters.stage !== 'all') ||
@@ -409,7 +410,8 @@ export function Opportunities() {
     !!activeFilters.amountMax ||
     !!activeFilters.closeDateFrom ||
     !!activeFilters.closeDateTo ||
-    searchTerm.trim().length > 0;
+    searchTerm.trim().length > 0 ||
+    !!alphabetLetter;
 
   const clearFilters = () => {
     setActiveFilters({ 
@@ -422,6 +424,7 @@ export function Opportunities() {
       closeDateTo: ''
     });
     setSearchTerm('');
+    setAlphabetLetter('');
   };
 
   const handleFilterChange = (key: string, value: string) =>
@@ -433,6 +436,8 @@ export function Opportunities() {
       opp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       opp.account.toLowerCase().includes(searchTerm.toLowerCase()) ||
       opp.owner.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesAlphabet = !alphabetLetter || opp.name.toUpperCase().startsWith(alphabetLetter);
 
     const matchesStage   = !activeFilters.stage   || activeFilters.stage   === 'all' || opp.stage   === activeFilters.stage;
     const matchesAccount = !activeFilters.account || activeFilters.account   === 'all' || opp.account === activeFilters.account;
@@ -454,7 +459,7 @@ export function Opportunities() {
       matchesCloseDate = date >= from && date <= to;
     }
 
-    return matchesSearch && matchesStage && matchesAccount && matchesOwner && matchesAmount && matchesCloseDate;
+    return matchesSearch && matchesStage && matchesAccount && matchesOwner && matchesAmount && matchesCloseDate && matchesAlphabet;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -594,6 +599,10 @@ export function Opportunities() {
         onFilterChange={handleFilterChange}
         onClearFilters={clearFilters}
         hasActiveFilters={hasActiveFilters}
+        alphabetFilter={{
+          value: alphabetLetter,
+          onChange: setAlphabetLetter
+        }}
         emptyMessage="No opportunities match the current filters."
       />
 

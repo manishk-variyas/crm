@@ -45,6 +45,25 @@ const QUOTES: Quote[] = [
 
 export function Quotes() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [alphabetLetter, setAlphabetLetter] = useState('');
+
+  const filteredData = QUOTES.filter((quote) => {
+    const matchesSearch = !searchTerm ||
+      quote.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      quote.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      quote.customerCompany.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesAlphabet = !alphabetLetter || quote.customerName.toUpperCase().startsWith(alphabetLetter);
+
+    return matchesSearch && matchesAlphabet;
+  });
+
+  const hasActiveFilters = !!searchTerm || !!alphabetLetter;
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setAlphabetLetter('');
+  };
 
   const columns: Column<Quote>[] = [
     {
@@ -145,15 +164,21 @@ export function Quotes() {
       />
 
       <DataTable 
-        data={QUOTES}
+        data={filteredData}
         columns={columns}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+        onClearFilters={clearFilters}
+        hasActiveFilters={hasActiveFilters}
+        alphabetFilter={{
+          value: alphabetLetter,
+          onChange: setAlphabetLetter
+        }}
         searchPlaceholder="Search quotes..."
         pagination={{
           currentPage: 1,
           totalPages: 1,
-          totalResults: QUOTES.length,
+          totalResults: filteredData.length,
           resultsPerPage: 10,
           onPageChange: (page) => console.log('Page change:', page)
         }}

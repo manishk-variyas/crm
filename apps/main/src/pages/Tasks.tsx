@@ -94,6 +94,26 @@ const TASKS: Task[] = [
 export function Tasks() {
   const [searchTerm, setSearchTerm] = useState('');
   const [view, setView] = useState<'list' | 'calendar'>('list');
+  const [alphabetLetter, setAlphabetLetter] = useState('');
+
+  const filteredData = TASKS.filter((task) => {
+    const matchesSearch = !searchTerm ||
+      task.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.relatedTo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.ownerName.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesAlphabet = !alphabetLetter || task.subject.toUpperCase().startsWith(alphabetLetter);
+
+    return matchesSearch && matchesAlphabet;
+  });
+
+  const hasActiveFilters = !!searchTerm || !!alphabetLetter;
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setAlphabetLetter('');
+  };
 
   const columns: Column<Task>[] = [
     {
@@ -234,15 +254,21 @@ export function Tasks() {
       />
 
       <DataTable 
-        data={TASKS}
+        data={filteredData}
         columns={columns}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+        onClearFilters={clearFilters}
+        hasActiveFilters={hasActiveFilters}
+        alphabetFilter={{
+          value: alphabetLetter,
+          onChange: setAlphabetLetter
+        }}
         searchPlaceholder="Search tasks..."
         pagination={{
           currentPage: 1,
           totalPages: 1,
-          totalResults: TASKS.length,
+          totalResults: filteredData.length,
           resultsPerPage: 10,
           onPageChange: (page) => console.log('Page change:', page)
         }}

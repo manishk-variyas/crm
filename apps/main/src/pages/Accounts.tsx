@@ -728,6 +728,7 @@ export function Accounts() {
   const [viewingAccount, setViewingAccount] = useState<Account | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [viewingOwner, setViewingOwner] = useState<string | null>(null);
+  const [alphabetLetter, setAlphabetLetter] = useState('');
 
   const hasActiveFilters =
     (activeFilters.status && activeFilters.status !== 'all') ||
@@ -736,7 +737,8 @@ export function Accounts() {
     !!activeFilters.revenueMin ||
     !!activeFilters.revenueMax ||
     !!activeFilters.lastActivityValue ||
-    searchTerm.trim().length > 0;
+    searchTerm.trim().length > 0 ||
+    !!alphabetLetter;
 
   const clearFilters = () => {
     setActiveFilters({
@@ -749,6 +751,7 @@ export function Accounts() {
       lastActivityValue: ''
     });
     setSearchTerm('');
+    setAlphabetLetter('');
   };
 
   const handleFilterChange = (key: string, value: string) => {
@@ -760,6 +763,8 @@ export function Accounts() {
       account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       account.industry.toLowerCase().includes(searchTerm.toLowerCase()) ||
       account.website.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesAlphabet = !alphabetLetter || account.name.toUpperCase().startsWith(alphabetLetter);
 
     const matchesStatus = !activeFilters.status || activeFilters.status === 'all' || account.status === activeFilters.status;
     const matchesIndustry = !activeFilters.industry || activeFilters.industry === 'all' || account.industry === activeFilters.industry;
@@ -794,7 +799,7 @@ export function Accounts() {
       matchesActivity = rowDays <= filterDays;
     }
 
-    return matchesSearch && matchesStatus && matchesIndustry && matchesOwner && matchesRevenue && matchesActivity;
+    return matchesSearch && matchesStatus && matchesIndustry && matchesOwner && matchesRevenue && matchesActivity && matchesAlphabet;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -929,6 +934,10 @@ export function Accounts() {
         onFilterChange={handleFilterChange}
         onClearFilters={clearFilters}
         hasActiveFilters={hasActiveFilters}
+        alphabetFilter={{
+          value: alphabetLetter,
+          onChange: setAlphabetLetter
+        }}
         emptyMessage="No accounts match the current filters."
       />
 

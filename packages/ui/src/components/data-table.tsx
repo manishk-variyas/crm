@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Search, 
-  Filter, 
-  ArrowUpDown, 
-  ChevronLeft, 
-  ChevronRight,
-  X
-} from 'lucide-react';
+import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { Button } from './button';
 import { Card, CardContent } from './card';
+import { AlphabetFilter } from './alphabet-filter';
 import { cn } from '../lib/utils';
 
 export interface Column<T> {
@@ -63,6 +57,10 @@ export interface DataTableProps<T> {
   onClearFilters?: () => void;
   hasActiveFilters?: boolean;
   emptyMessage?: string;
+  alphabetFilter?: {
+    value: string;
+    onChange: (value: string) => void;
+  };
 }
 
 function SortDropdown<T>({ 
@@ -223,7 +221,8 @@ export function DataTable<T>({
   onFilterChange,
   onClearFilters,
   hasActiveFilters: parentHasActiveFilters,
-  emptyMessage = "No data found."
+  emptyMessage = "No data found.",
+  alphabetFilter
 }: DataTableProps<T>) {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [currentSort, setCurrentSort] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(defaultSort || null);
@@ -235,7 +234,11 @@ export function DataTable<T>({
 
   const hasActiveFilters = parentHasActiveFilters !== undefined 
     ? parentHasActiveFilters 
-    : (Object.values(activeFilters || {}).some(v => v && v !== 'all') || !!(searchTerm && searchTerm.trim().length > 0));
+    : (
+        Object.values(activeFilters || {}).some(v => v && v !== 'all') || 
+        !!(searchTerm && searchTerm.trim().length > 0) ||
+        !!(alphabetFilter?.value)
+      );
 
   return (
     <Card className="shadow-lg bg-card overflow-hidden p-0">
@@ -303,6 +306,14 @@ export function DataTable<T>({
               hasActiveFilters={hasActiveFilters}
             />
           </div>
+        )}
+
+        {/* Alphabet Filter */}
+        {alphabetFilter && (
+          <AlphabetFilter 
+            value={alphabetFilter.value} 
+            onChange={alphabetFilter.onChange} 
+          />
         )}
 
         {/* Table */}

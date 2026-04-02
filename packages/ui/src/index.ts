@@ -39,6 +39,8 @@ export { FormField } from './components/form-field';
 export type { FormFieldProps } from './components/form-field';
 export { Tabs } from './components/tabs';
 export type { TabsProps, Tab } from './components/tabs';
+export { AlphabetFilter } from './components/alphabet-filter';
+export type { AlphabetFilterProps } from './components/alphabet-filter';
 export { BarChart } from './components/charts/bar-chart';
 export type { BarChartProps } from './components/charts/bar-chart';
 export { DonutChart } from './components/charts/donut-chart';

@@ -477,12 +477,14 @@ export function Contacts() {
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [alphabetLetter, setAlphabetLetter] = useState('');
 
   const hasActiveFilters =
     (activeFilters.role && activeFilters.role !== 'all') ||
     (activeFilters.account && activeFilters.account !== 'all') ||
     !!activeFilters.lastActivityValue ||
-    searchTerm.trim().length > 0;
+    searchTerm.trim().length > 0 ||
+    !!alphabetLetter;
 
   const clearFilters = () => {
     setActiveFilters({
@@ -492,6 +494,7 @@ export function Contacts() {
       lastActivityValue: ''
     });
     setSearchTerm('');
+    setAlphabetLetter('');
   };
 
   const handleFilterChange = (key: string, value: string) => {
@@ -503,6 +506,8 @@ export function Contacts() {
       contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.account.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesAlphabet = !alphabetLetter || contact.name.toUpperCase().startsWith(alphabetLetter);
 
     const matchesRole = !activeFilters.role || activeFilters.role === 'all' || contact.role === activeFilters.role;
     const matchesAccount = !activeFilters.account || activeFilters.account === 'all' || contact.account === activeFilters.account;
@@ -524,7 +529,7 @@ export function Contacts() {
       matchesActivity = rowDays <= filterDays;
     }
 
-    return matchesSearch && matchesRole && matchesAccount && matchesActivity;
+    return matchesSearch && matchesRole && matchesAccount && matchesActivity && matchesAlphabet;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -656,6 +661,10 @@ export function Contacts() {
         onClearFilters={clearFilters}
         hasActiveFilters={hasActiveFilters}
         emptyMessage="No contacts match the current filters."
+        alphabetFilter={{
+          value: alphabetLetter,
+          onChange: setAlphabetLetter
+        }}
         pagination={{
           currentPage: 1,
           totalPages: 1,
