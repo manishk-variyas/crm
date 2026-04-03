@@ -4,114 +4,235 @@
  * @route /opportunities
  */
 import React, { useState } from 'react';
-import { 
-  Plus, 
-  Target,
+import {
+  Plus,
   Download,
   Building2,
-  Calendar,
   MoreVertical,
   X,
   Edit,
   Share2,
-  CheckCircle,
-  Save,
-  ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Phone,
+  Mail,
+  Target
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, Modal, StatusBadge, getStatusVariant, PageActions, FormInput, FormSelect, FormTextarea, Tabs } from '@crm/ui';
+import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, StatusBadge, getStatusVariant, PageActions, ExportOptionsModal } from '@crm/ui';
+import { OpportunityModal, OpportunityQuickViewModal } from '../components/Opportunities/modals';
 
 interface Opportunity {
   id: string;
+  oppId: string;
   name: string;
+  subTitle: string;
   account: string;
   amount: string;
-  stage: 'Qualification' | 'Proposal' | 'Negotiation' | 'Closed Won' | 'Closed Lost';
-  probability: string;
-  closeDate: string;
+  stage: string;
+  expectedClosure: string;
+  lastContact: string;
+  createdOn: string;
+  email: string;
+  phone: string;
   owner: string;
+  productInterest?: string;
+  description?: string;
+  comments?: string;
+  industry?: string;
+  emdAmount?: string;
+  source?: string;
+  sourceName?: string;
+  reverseAuction?: 'Yes' | 'No';
 }
 
 const OPPORTUNITIES: Opportunity[] = [
   {
     id: '1',
-    name: 'Unified Platform Expansion',
-    account: 'Cyberdyne Systems',
-    amount: '$450,000',
+    oppId: 'OPP-005',
+    name: 'Arc Reactor Supply Chain',
+    subTitle: 'Tony Stark (CEO)',
+    account: 'Stark Industries',
+    amount: '$500,000',
     stage: 'Negotiation',
-    probability: '80%',
-    closeDate: 'Oct 15, 2026',
-    owner: 'Alex Morgan'
+    expectedClosure: 'Not set',
+    lastContact: 'Yesterday',
+    createdOn: '2026-03-15',
+    email: 'tony@stark.com',
+    phone: '+1 (555) 777-7777',
+    owner: 'Alex Morgan',
+    productInterest: 'Arc Reactor Tech',
+    description: 'Main supply chain for next-gen energy systems.',
+    industry: 'Technology',
+    emdAmount: '5,000',
+    source: 'Referral',
+    sourceName: 'Pepper Potts',
+    reverseAuction: 'No'
   },
   {
     id: '2',
-    name: 'Global Licensing Deal',
-    account: 'Massive Dynamic',
-    amount: '$1,200,000',
-    stage: 'Proposal',
-    probability: '60%',
-    closeDate: 'Nov 30, 2026',
-    owner: 'Alex Morgan'
+    oppId: 'OPP-004',
+    name: 'Hoverboard Prototype Materials',
+    subTitle: 'Marty McFly (Product Manager)',
+    account: 'Hill Valley Inc.',
+    amount: '$30,000',
+    stage: 'Prospecting',
+    expectedClosure: 'Not set',
+    lastContact: '5 days ago',
+    createdOn: '2026-03-12',
+    email: 'marty@hillvalley.com',
+    phone: '+1 (555) 111-2222',
+    owner: 'Alex Morgan',
+    productInterest: 'Anti-gravity Composites',
+    description: 'Looking for specialized materials for prototype testing.',
+    industry: 'Manufacturing',
+    emdAmount: '1,000',
+    source: 'Website',
+    reverseAuction: 'No'
   },
   {
     id: '3',
-    name: 'Cloud Infrastructure Upgrade',
-    account: 'Umbrella Corporation',
-    amount: '$250,000',
-    stage: 'Qualification',
-    probability: '20%',
-    closeDate: 'Dec 12, 2026',
-    owner: 'Alex Morgan'
+    oppId: 'OPP-003',
+    name: 'Colony Terraforming Equipment',
+    subTitle: 'Ellen Ripley (Operations Director)',
+    account: 'Weyland-Yutani',
+    amount: '$120,000',
+    stage: 'Qualified',
+    expectedClosure: 'Not set',
+    lastContact: '3 days ago',
+    createdOn: '2026-03-10',
+    email: 'ripley@weyland.com',
+    phone: '+1 (555) 888-9999',
+    owner: 'Alex Morgan',
+    productInterest: 'Atmospheric Processors',
+    description: 'Heavy duty terraforming equipment for extraterrestrial colonies.',
+    industry: 'Manufacturing',
+    emdAmount: '10,000',
+    source: 'LinkedIn',
+    reverseAuction: 'No'
   },
   {
     id: '4',
-    name: 'Enterprise Security Suite',
-    account: 'Wayne Enterprises',
-    amount: '$850,000',
-    stage: 'Closed Won',
-    probability: '100%',
-    closeDate: 'Sep 01, 2026',
-    owner: 'Alex Morgan'
+    oppId: 'OPP-007',
+    name: 'Artifact Preservation Tech',
+    subTitle: 'Diana Prince (Curator)',
+    account: 'Louvre Museum',
+    amount: '$15,000',
+    stage: 'Discovery Done',
+    expectedClosure: 'Not set',
+    lastContact: '2 weeks ago',
+    createdOn: '2026-03-20',
+    email: 'diana@louvre.com',
+    phone: '+1 (555) 000-1111',
+    owner: 'Alex Morgan',
+    productInterest: 'Climate Control Systems',
+    description: 'High-precision climate and humidity control for museum storage.',
+    industry: 'Government/Non-Profit',
+    emdAmount: '500',
+    source: 'Trade Show',
+    reverseAuction: 'No'
   },
   {
     id: '5',
-    name: 'Next-Gen Analytics Engine',
-    account: 'Stark Industries',
-    amount: '$600,000',
-    stage: 'Closed Lost',
-    probability: '0%',
-    closeDate: 'Aug 15, 2026',
-    owner: 'Alex Morgan'
+    oppId: 'OPP-001',
+    name: 'AI Defense System Upgrade',
+    subTitle: 'Sarah Connor (CTO)',
+    account: 'Cyberdyne Systems',
+    amount: '$50,000',
+    stage: 'Prospecting',
+    expectedClosure: '2026-04-15',
+    lastContact: '2 days ago',
+    createdOn: '2026-03-01',
+    email: 'sarah@cyberdyne.com',
+    phone: '+1 (555) 123-4567',
+    owner: 'Alex Morgan',
+    productInterest: 'Neural Processors',
+    description: 'Strategic upgrade for existing AI defense infrastructure.',
+    industry: 'Technology',
+    emdAmount: '2,500',
+    source: 'Cold Call',
+    reverseAuction: 'No'
+  },
+  {
+    id: '6',
+    oppId: 'OPP-006',
+    name: 'Security Systems Overhaul',
+    subTitle: 'Bruce Wayne (Chairman)',
+    account: 'Wayne Enterprises',
+    amount: '$250,000',
+    stage: 'Proposal Sent',
+    expectedClosure: 'Not set',
+    lastContact: '1 week ago',
+    createdOn: '2026-03-18',
+    email: 'bruce@wayne.com',
+    phone: '+1 (555) 987-6543',
+    owner: 'Alex Morgan',
+    productInterest: 'Biometric Security',
+    description: 'Complete overhaul of physical and digital security protocols at Wayne Tower.',
+    industry: 'Finance',
+    emdAmount: '15,000',
+    source: 'Referral',
+    reverseAuction: 'No'
+  },
+  {
+    id: '7',
+    oppId: 'OPP-002',
+    name: 'Cloud Migration Project',
+    subTitle: 'John Smith (VP of Engineering)',
+    account: 'TechCorp',
+    amount: '$75,000',
+    stage: 'Discovery Done',
+    expectedClosure: '2026-05-10',
+    lastContact: '1 day ago',
+    createdOn: '2026-03-05',
+    email: 'john@techcorp.com',
+    phone: '+1 (555) 333-4444',
+    owner: 'Alex Morgan',
+    productInterest: 'Multi-cloud Management',
+    description: 'Enterprise-wide migration of on-premise infrastructure to hybrid cloud.',
+    industry: 'Technology',
+    emdAmount: '3,000',
+    source: 'Website',
+    reverseAuction: 'No'
   }
 ];
 
 const sortOptions: SortOption[] = [
+  { label: 'OPP ID', key: 'oppId' },
   { label: 'Name', key: 'name' },
   { label: 'Account', key: 'account' },
   { label: 'Amount', key: 'amount' },
-  { label: 'Stage', key: 'stage' },
-  { label: 'Probability', key: 'probability' },
-  { label: 'Close Date', key: 'closeDate' }
+  { label: 'Status', key: 'stage' },
+  { label: 'Close Date', key: 'expectedClosure' },
+  { label: 'Created On', key: 'createdOn' }
 ];
 
 const filterConfigs: FilterConfig[] = [
-  { key: 'stage', label: 'Stage', type: 'select', options: [
-    { value: 'Qualification', label: 'Qualification' },
-    { value: 'Proposal', label: 'Proposal' },
-    { value: 'Negotiation', label: 'Negotiation' },
-    { value: 'Closed Won', label: 'Closed Won' },
-    { value: 'Closed Lost', label: 'Closed Lost' }
-  ]},
-  { key: 'account', label: 'Account', type: 'select', options: [
-    { value: 'Cyberdyne Systems', label: 'Cyberdyne Systems' },
-    { value: 'Massive Dynamic', label: 'Massive Dynamic' },
-    { value: 'Umbrella Corporation', label: 'Umbrella Corporation' },
-    { value: 'Wayne Enterprises', label: 'Wayne Enterprises' },
-    { value: 'Stark Industries', label: 'Stark Industries' }
-  ]},
-  { key: 'owner', label: 'Owner', type: 'select', options: [
-    { value: 'Alex Morgan', label: 'Alex Morgan' }
-  ]},
+  {
+    key: 'stage', label: 'Status', type: 'select', options: [
+      { value: 'Prospecting', label: 'Prospecting' },
+      { value: 'Qualification', label: 'Qualification' },
+      { value: 'Proposal', label: 'Proposal' },
+      { value: 'Qualified', label: 'Qualified' },
+      { value: 'Discovery Done', label: 'Discovery Done' },
+      { value: 'Proposal Sent', label: 'Proposal Sent' },
+      { value: 'Negotiation', label: 'Negotiation' },
+      { value: 'Closed Won', label: 'Closed Won' },
+      { value: 'Closed Lost', label: 'Closed Lost' }
+    ]
+  },
+  {
+    key: 'account', label: 'Company', type: 'select', options: [
+      { value: 'Cyberdyne Systems', label: 'Cyberdyne Systems' },
+      { value: 'Massive Dynamic', label: 'Massive Dynamic' },
+      { value: 'Umbrella Corporation', label: 'Umbrella Corporation' },
+      { value: 'Wayne Enterprises', label: 'Wayne Enterprises' },
+      { value: 'Stark Industries', label: 'Stark Industries' }
+    ]
+  },
+  {
+    key: 'owner', label: 'Owner', type: 'select', options: [
+      { value: 'Alex Morgan', label: 'Alex Morgan' }
+    ]
+  },
   {
     key: 'amount',
     label: 'Amount Range ($)',
@@ -163,7 +284,6 @@ const filterConfigs: FilterConfig[] = [
 interface FilterState {
   stage: string;
   account: string;
-  owner: string;
   amountMin: string;
   amountMax: string;
   closeDateFrom: string;
@@ -173,7 +293,6 @@ interface FilterState {
 const defaultFilters: FilterState = {
   stage: 'all',
   account: 'all',
-  owner: 'all',
   amountMin: '',
   amountMax: '',
   closeDateFrom: '',
@@ -198,17 +317,17 @@ function ActionMenu({ opportunity, onEdit }: { opportunity: Opportunity, onEdit:
 
   return (
     <div className="relative flex justify-end" ref={menuRef}>
-      <button 
+      <button
         onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
         className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all"
       >
         <MoreVertical className="w-4.5 h-4.5" />
       </button>
-      
+
       {isOpen && (
         <div className="absolute right-6 top-0 mt-8 w-36 bg-card border border-border/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex flex-col p-1.5 gap-0.5">
-            <button 
+            <button
               onClick={(e) => { e.stopPropagation(); setIsOpen(false); onEdit(opportunity); }}
               className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors w-full text-left group"
             >
@@ -230,182 +349,20 @@ function ActionMenu({ opportunity, onEdit }: { opportunity: Opportunity, onEdit:
   );
 }
 
-function OpportunityModal({ opportunity, onClose }: { opportunity?: Opportunity | null, onClose: () => void }) {
-  const isEditing = !!opportunity;
-  const [activeTab, setActiveTab] = useState<'details' | 'tasks'>('details');
-  
-  return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      title={isEditing ? 'Edit Opportunity' : 'Add New Opportunity'}
-      description={isEditing ? 'Update the details for this sales opportunity.' : 'Enter the details for the new sales opportunity.'}
-      tabs={
-        <Tabs
-          tabs={[
-            { id: 'details', label: 'Opportunity Details' },
-            { id: 'tasks', label: 'Associated Tasks' }
-          ]}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
-      }
-      footer={
-        <>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={onClose} className="flex items-center gap-2">
-            <Save className="w-4 h-4" />
-            {isEditing ? 'Update Deal' : 'Create Opportunity'}
-          </Button>
-        </>
-      }
-    >
-      {activeTab === 'details' ? (
-        <div className="space-y-8 pb-4">
-          <div className="space-y-4">
-            <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">General Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-              <div className="col-span-1 md:col-span-2">
-                <FormInput
-                  label="Opportunity Name"
-                  defaultValue={opportunity?.name || ''}
-                  placeholder="Unified Platform Expansion"
-                  icon={<Target />}
-                />
-              </div>
-              
-              <FormSelect
-                label="Associated Account"
-                defaultValue={opportunity?.account || ''}
-                placeholder="Select an account"
-                options={[
-                  { value: 'Cyberdyne Systems', label: 'Cyberdyne Systems' },
-                  { value: 'Massive Dynamic', label: 'Massive Dynamic' },
-                  { value: 'Umbrella Corporation', label: 'Umbrella Corporation' },
-                  { value: 'Wayne Enterprises', label: 'Wayne Enterprises' },
-                  { value: 'Stark Industries', label: 'Stark Industries' },
-                ]}
-              />
-
-              <FormSelect
-                label="Sales Stage"
-                defaultValue={opportunity?.stage || 'Qualification'}
-                options={[
-                  { value: 'Qualification', label: 'Qualification' },
-                  { value: 'Proposal', label: 'Proposal' },
-                  { value: 'Negotiation', label: 'Negotiation' },
-                  { value: 'Closed Won', label: 'Closed Won' },
-                  { value: 'Closed Lost', label: 'Closed Lost' },
-                ]}
-              />
-
-              <FormInput
-                label="Deal Amount ($)"
-                defaultValue={opportunity?.amount || ''}
-                placeholder="450,000"
-              />
-
-              <FormInput
-                label="Probability (%)"
-                defaultValue={opportunity?.probability.replace('%', '') || ''}
-                placeholder="80"
-              />
-
-              <FormInput
-                label="Expected Close Date"
-                defaultValue={opportunity ? new Date(opportunity.closeDate).toISOString().split('T')[0] : ''}
-                type="date"
-              />
-
-              <FormSelect
-                label="Opportunity Owner"
-                defaultValue="Alex Morgan"
-                options={[
-                  { value: 'Alex Morgan', label: 'Alex Morgan' },
-                ]}
-              />
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </Modal>
-  );
-}
-
-function OwnerProfileModal({ ownerName, onClose }: { ownerName: string, onClose: () => void }) {
-  // Mock data for the owner (consistent with Accounts)
-  const owner = {
-    name: ownerName,
-    initials: ownerName.split(' ').map(n => n[0]).join(''),
-    title: 'Account Owner',
-    email: 'alex.morgan@example.com',
-    phone: '+1 (555) 123-4567',
-    manager: 'Sarah Jenkins',
-    department: 'Sales'
-  };
-
-  return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      title="Owner Profile"
-      maxWidth="md"
-      footer={
-        <Button onClick={onClose} variant="outline" className="h-10 px-6 font-semibold">
-          Close
-        </Button>
-      }
-    >
-      <div className="space-y-8 py-2">
-        <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold border-2 border-primary/20 shadow-sm">
-            {owner.initials}
-          </div>
-          <div className="flex flex-col">
-            <h2 className="text-xl font-bold text-foreground">{owner.name}</h2>
-            <p className="text-[14px] text-muted-foreground font-medium">{owner.title}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-y-6 pt-2">
-          <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Email</h4>
-            <p className="text-[15px] font-medium text-foreground">{owner.email}</p>
-          </div>
-          <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Phone</h4>
-            <p className="text-[15px] font-medium text-foreground">{owner.phone}</p>
-          </div>
-          <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Manager</h4>
-            <p className="text-[15px] font-medium text-foreground">{owner.manager}</p>
-          </div>
-          <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Department</h4>
-            <p className="text-[15px] font-medium text-foreground">{owner.department}</p>
-          </div>
-        </div>
-      </div>
-    </Modal>
-  );
-}
-
-
 export function Opportunities() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({ stage: 'all', account: 'all', owner: 'all' });
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({ stage: 'all', account: 'all' });
   const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null);
+  const [viewingOpp, setViewingOpp] = useState<Opportunity | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [viewingOwner, setViewingOwner] = useState<string | null>(null);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [alphabetLetter, setAlphabetLetter] = useState('');
 
   const hasActiveFilters =
     (activeFilters.stage && activeFilters.stage !== 'all') ||
     (activeFilters.account && activeFilters.account !== 'all') ||
-    (activeFilters.owner && activeFilters.owner !== 'all') ||
     !!activeFilters.amountMin ||
     !!activeFilters.amountMax ||
     !!activeFilters.closeDateFrom ||
@@ -414,10 +371,9 @@ export function Opportunities() {
     !!alphabetLetter;
 
   const clearFilters = () => {
-    setActiveFilters({ 
-      stage: 'all', 
-      account: 'all', 
-      owner: 'all',
+    setActiveFilters({
+      stage: 'all',
+      account: 'all',
       amountMin: '',
       amountMax: '',
       closeDateFrom: '',
@@ -430,18 +386,31 @@ export function Opportunities() {
   const handleFilterChange = (key: string, value: string) =>
     setActiveFilters((prev) => ({ ...prev, [key]: value }));
 
+  const toggleSelection = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    if (selectedIds.length === filteredData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredData.map(opp => opp.id));
+    }
+  };
+
   const filteredData = OPPORTUNITIES.filter((opp) => {
     const matchesSearch =
       !searchTerm ||
       opp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      opp.account.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      opp.owner.toLowerCase().includes(searchTerm.toLowerCase());
+      opp.account.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesAlphabet = !alphabetLetter || opp.name.toUpperCase().startsWith(alphabetLetter);
 
-    const matchesStage   = !activeFilters.stage   || activeFilters.stage   === 'all' || opp.stage   === activeFilters.stage;
-    const matchesAccount = !activeFilters.account || activeFilters.account   === 'all' || opp.account === activeFilters.account;
-    const matchesOwner   = !activeFilters.owner   || activeFilters.owner   === 'all' || opp.owner   === activeFilters.owner;
+    const matchesStage = !activeFilters.stage || activeFilters.stage === 'all' || opp.stage === activeFilters.stage;
+    const matchesAccount = !activeFilters.account || activeFilters.account === 'all' || opp.account === activeFilters.account;
 
     let matchesAmount = true;
     if (activeFilters.amountMin || activeFilters.amountMax) {
@@ -453,13 +422,17 @@ export function Opportunities() {
 
     let matchesCloseDate = true;
     if (activeFilters.closeDateFrom || activeFilters.closeDateTo) {
-      const date = new Date(opp.closeDate).getTime();
-      const from = activeFilters.closeDateFrom ? new Date(activeFilters.closeDateFrom).getTime() : 0;
-      const to = activeFilters.closeDateTo ? new Date(activeFilters.closeDateTo).getTime() : Infinity;
-      matchesCloseDate = date >= from && date <= to;
+      if (opp.expectedClosure === 'Not set') {
+        matchesCloseDate = false;
+      } else {
+        const date = new Date(opp.expectedClosure).getTime();
+        const from = activeFilters.closeDateFrom ? new Date(activeFilters.closeDateFrom).getTime() : 0;
+        const to = activeFilters.closeDateTo ? new Date(activeFilters.closeDateTo).getTime() : Infinity;
+        matchesCloseDate = date >= from && date <= to;
+      }
     }
 
-    return matchesSearch && matchesStage && matchesAccount && matchesOwner && matchesAmount && matchesCloseDate && matchesAlphabet;
+    return matchesSearch && matchesStage && matchesAccount && matchesAmount && matchesCloseDate && matchesAlphabet;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -468,14 +441,16 @@ export function Opportunities() {
       const bVal = parseFloat((b.amount as string).replace(/[^0-9.-]+/g, ""));
       return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
     }
-    if (sortConfig.key === 'probability') {
-      const aVal = parseFloat((a.probability as string).replace(/[^0-9.-]+/g, ""));
-      const bVal = parseFloat((b.probability as string).replace(/[^0-9.-]+/g, ""));
+    if (sortConfig.key === 'expectedClosure') {
+      if (a.expectedClosure === 'Not set') return sortConfig.direction === 'asc' ? 1 : -1;
+      if (b.expectedClosure === 'Not set') return sortConfig.direction === 'asc' ? -1 : 1;
+      const aVal = new Date(a.expectedClosure).getTime();
+      const bVal = new Date(b.expectedClosure).getTime();
       return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
     }
-    if (sortConfig.key === 'closeDate') {
-      const aVal = new Date(a.closeDate).getTime();
-      const bVal = new Date(b.closeDate).getTime();
+    if (sortConfig.key === 'createdOn') {
+      const aVal = new Date(a.createdOn).getTime();
+      const bVal = new Date(b.createdOn).getTime();
       return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
     }
 
@@ -488,44 +463,76 @@ export function Opportunities() {
 
   const columns: Column<Opportunity>[] = [
     {
-      header: 'Opportunity Name',
+      header: (
+        <input
+          type="checkbox"
+          checked={selectedIds.length === filteredData.length && filteredData.length > 0}
+          onChange={(e) => { e.stopPropagation(); toggleAllSelection(); }}
+          onClick={(e) => e.stopPropagation()}
+          className="w-4 h-4 rounded border-border bg-background checked:bg-primary transition-all cursor-pointer"
+        />
+      ),
+      headerClassName: 'w-10 px-4',
+      cellClassName: 'px-4',
       render: (opp) => (
-        <div className="flex items-center gap-4 text-left">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-            <Target className="w-5 h-5" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-foreground font-semibold">{opp.name}</span>
-          </div>
-        </div>
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(opp.id)}
+          onChange={() => { }}
+          onClick={(e) => toggleSelection(opp.id, e as any)}
+          className="w-4 h-4 rounded border-border bg-background checked:bg-primary transition-all cursor-pointer"
+        />
       )
     },
     {
-      header: 'Owner',
+      header: 'OPP ID',
+      accessorKey: 'oppId',
+      sortable: true,
+      cellClassName: 'font-bold text-[11px] text-primary hover:underline cursor-pointer',
       render: (opp) => (
-        <span 
-          className="text-primary font-semibold hover:underline cursor-pointer text-[13px]"
-          onClick={() => setViewingOwner(opp.owner)}
-        >
-          {opp.owner}
+        <span onClick={(e) => { e.stopPropagation(); setViewingOpp(opp); }}>
+          {opp.oppId}
         </span>
       )
     },
     {
-      header: 'Account',
+      header: 'CREATED ON',
+      accessorKey: 'createdOn',
+      sortable: true,
+      cellClassName: 'text-muted-foreground font-medium'
+    },
+    {
+      header: 'OPPORTUNITY TITLE/NAME',
+      headerClassName: 'min-w-[240px]',
+      sortable: true,
+      sortKey: 'name',
+      render: (opp) => {
+        const initials = opp.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+        return (
+          <div className="flex items-center gap-4 text-left">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
+              {initials}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-foreground font-bold">{opp.name}</span>
+              <span className="text-[12px] text-muted-foreground font-medium">{opp.subTitle}</span>
+            </div>
+          </div>
+        );
+      }
+    },
+    {
+      header: 'COMPANY',
+      sortable: true,
+      sortKey: 'account',
       render: (opp) => (
-        <div className="flex items-center gap-2 text-muted-foreground font-medium">
-          <Building2 className="w-4 h-4 text-muted-foreground/50" />
-          {opp.account}
-        </div>
+        <span className="text-foreground font-bold">{opp.account}</span>
       )
     },
     {
-      header: 'Amount',
-      render: (opp) => <span className="text-foreground font-bold">{opp.amount}</span>
-    },
-    {
-      header: 'Stage',
+      header: 'STATUS',
+      sortable: true,
+      sortKey: 'stage',
       render: (opp) => (
         <StatusBadge
           status={opp.stage}
@@ -534,51 +541,77 @@ export function Opportunities() {
       )
     },
     {
-      header: 'Probability',
+      header: 'EXPECTED CLOSURE',
+      sortable: true,
+      sortKey: 'expectedClosure',
       render: (opp) => (
-        <div className="w-full max-w-[100px] space-y-1.5 mx-auto">
-          <div className="flex items-center justify-between text-[11px] font-bold">
-            <span className="text-muted-foreground/70">{opp.probability}</span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div 
-              className={cn(
-                "h-full rounded-full transition-all duration-500",
-                opp.stage === 'Closed Won'  ? "bg-emerald-500" : 
-                opp.stage === 'Closed Lost' ? "bg-rose-500"    : "bg-blue-500"
-              )}
-              style={{ width: opp.probability }}
-            />
-          </div>
-        </div>
-      ),
-      align: 'center'
-    },
-    {
-      header: 'Close Date',
-      render: (opp) => (
-        <div className="flex items-center gap-2 text-muted-foreground font-medium whitespace-nowrap">
-          <Calendar className="w-3.5 h-3.5 text-muted-foreground/50" />
-          {opp.closeDate}
+        <div className="flex flex-col">
+          <span className={cn(
+            "font-bold",
+            opp.expectedClosure === 'Not set' ? "text-muted-foreground/50" : "text-foreground"
+          )}>
+            {opp.expectedClosure}
+          </span>
+          {opp.expectedClosure !== 'Not set' && (
+            <span className="text-[11px] font-bold text-muted-foreground/60">
+              Week {Math.ceil((new Date(opp.expectedClosure).getDate() + new Date(opp.expectedClosure).getDay()) / 7) + 12} {/* Mock week calculation */}
+            </span>
+          )}
         </div>
       )
     },
     {
-      header: '',
-      headerClassName: 'w-12',
+      header: 'VALUE',
+      sortable: true,
+      sortKey: 'amount',
+      render: (opp) => <span className="text-foreground font-medium">{opp.amount}</span>
+    },
+    {
+      header: 'LAST CONTACT',
+      accessorKey: 'lastContact',
+      sortable: true,
+      render: (opp) => (
+        <span className="text-muted-foreground font-medium">
+          {opp.lastContact}
+        </span>
+      )
+    },
+    {
+      header: 'CONTACT INFO',
+      render: () => (
+        <div className="flex items-center gap-3">
+          <button className="p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-md transition-all">
+            <Mail className="w-4 h-4" />
+          </button>
+          <button className="p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-md transition-all">
+            <Phone className="w-4 h-4" />
+          </button>
+        </div>
+      )
+    },
+    {
+      header: 'ACTIONS',
+      headerClassName: 'w-12 text-center',
+      align: 'center',
       render: (opp) => <ActionMenu opportunity={opp} onEdit={setEditingOpp} />
     }
   ];
 
   return (
     <div className="animate-in fade-in duration-500">
-      <PageHeader 
+      <PageHeader
         title="Opportunities"
         subtitle="Track and manage your sales pipeline and ongoing deals."
         actions={
-          <PageActions 
+          <PageActions
             actions={[
-              { label: 'Export', onClick: () => {}, icon: <Download className="w-4 h-4" />, variant: 'outline' },
+              {
+                label: 'Export',
+                onClick: () => setIsExportModalOpen(true),
+                icon: <Download className="w-4 h-4" />,
+                variant: 'outline',
+                disabled: selectedIds.length === 0
+              },
               { label: 'Add Opportunity', onClick: () => setIsAddModalOpen(true), icon: <Plus className="w-4 h-4" />, variant: 'primary' }
             ]}
           />
@@ -603,22 +636,38 @@ export function Opportunities() {
           value: alphabetLetter,
           onChange: setAlphabetLetter
         }}
+        pagination={{
+          currentPage: 1,
+          totalPages: 1,
+          totalResults: filteredData.length,
+          resultsPerPage: 10,
+          onPageChange: () => { }
+        }}
         emptyMessage="No opportunities match the current filters."
       />
 
       {(editingOpp || isAddModalOpen) && (
-        <OpportunityModal 
-          opportunity={editingOpp} 
+        <OpportunityModal
+          opportunity={editingOpp}
           onClose={() => {
             setEditingOpp(null);
             setIsAddModalOpen(false);
-          }} 
+          }}
         />
       )}
 
-      {viewingOwner && (
-        <OwnerProfileModal ownerName={viewingOwner} onClose={() => setViewingOwner(null)} />
+      {viewingOpp && (
+        <OpportunityQuickViewModal
+          opportunity={viewingOpp}
+          onClose={() => setViewingOpp(null)}
+          onEdit={setEditingOpp}
+        />
       )}
+
+      <ExportOptionsModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+      />
     </div>
   );
 }

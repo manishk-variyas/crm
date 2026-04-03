@@ -6,9 +6,12 @@
 import React, { useState } from 'react';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+const VALID_EMAIL = 'hello@gmail.com';
+const VALID_PASSWORD = 'hello';
 
-const VALID_EMAIL = 'SalesPerson0000@gmail.com';
-const VALID_PASSWORD = 'VISHAL_ADMIN@0000';
+
+// const VALID_EMAIL = 'SalesPerson0000@gmail.com';
+// const VALID_PASSWORD = 'VISHAL_ADMIN@0000';
 
 export function LoginForm() {
   const navigate = useNavigate();

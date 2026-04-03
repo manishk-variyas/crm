@@ -51,3 +51,5 @@ export { RevenueTrend, RevenueByVertical } from './components/charts/revenue-cha
 export { RevenueForecast, ExportReports } from './components/charts/other-charts';
 export { ReportStatsCard } from './components/charts/report-stats-card';
 export * from './components/modal';
+export { ExportOptionsModal } from './components/export-modal';
+export type { ExportOptionsModalProps } from './components/export-modal';

@@ -83,16 +83,16 @@ export function StatusBadge({
 export function getStatusVariant(status: string): StatusVariant {
   const statusLower = status.toLowerCase();
   
-  if (['active', 'completed', 'won', 'accepted', 'done'].includes(statusLower)) {
+  if (['active', 'completed', 'won', 'accepted', 'done', 'discovery done'].includes(statusLower)) {
     return 'active';
   }
-  if (['in progress', 'sent', 'qualified', 'proposal'].includes(statusLower)) {
+  if (['in progress', 'sent', 'qualified', 'proposal', 'proposal sent'].includes(statusLower)) {
     return 'proposal';
   }
   if (['churned', 'lost', 'declined'].includes(statusLower)) {
     return 'churned';
   }
-  if (['prospect', 'todo', 'to do', 'draft'].includes(statusLower)) {
+  if (['prospect', 'todo', 'to do', 'draft', 'prospecting'].includes(statusLower)) {
     return 'prospect';
   }
   if (['negotiation', 'high'].includes(statusLower)) {

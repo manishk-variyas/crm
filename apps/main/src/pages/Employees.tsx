@@ -9,7 +9,8 @@ import {
   Phone,
   MapPin
 } from 'lucide-react';
-import { PageHeader, DataTable, Column } from '@crm/ui';
+import { Download } from 'lucide-react';
+import { PageHeader, DataTable, Column, PageActions, ExportOptionsModal } from '@crm/ui';
 
 interface Employee {
   id: string;
@@ -114,6 +115,24 @@ const EMPLOYEES: Employee[] = [
 export function Employees() {
   const [searchTerm, setSearchTerm] = useState('');
   const [alphabetLetter, setAlphabetLetter] = useState('');
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
+
+  const toggleSelection = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    if (selectedIds.length === filteredData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredData.map(emp => emp.id));
+    }
+  };
 
   const filteredData = EMPLOYEES.filter((employee) => {
     const matchesSearch = !searchTerm ||
@@ -127,6 +146,15 @@ export function Employees() {
     return matchesSearch && matchesAlphabet;
   });
 
+  const sortedData = [...filteredData].sort((a, b) => {
+    const aValue = String(a[sortConfig.key as keyof Employee] || '').toLowerCase();
+    const bValue = String(b[sortConfig.key as keyof Employee] || '').toLowerCase();
+
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
   const hasActiveFilters = !!searchTerm || !!alphabetLetter;
 
   const clearFilters = () => {
@@ -136,13 +164,37 @@ export function Employees() {
 
   const columns: Column<Employee>[] = [
     {
+      header: (
+        <input 
+          type="checkbox" 
+          checked={selectedIds.length === filteredData.length && filteredData.length > 0}
+          onChange={(e) => { e.stopPropagation(); toggleAllSelection(); }}
+          onClick={(e) => e.stopPropagation()}
+          className="w-4 h-4 rounded border-border bg-background checked:bg-primary transition-all cursor-pointer"
+        />
+      ),
+      headerClassName: 'w-12 px-4',
+      cellClassName: 'px-4',
+      render: (employee) => (
+        <input 
+          type="checkbox" 
+          checked={selectedIds.includes(employee.id)}
+          onChange={() => {}}
+          onClick={(e) => toggleSelection(employee.id, e as any)}
+          className="w-4 h-4 rounded border-border bg-background checked:bg-primary transition-all cursor-pointer"
+        />
+      )
+    },
+    {
       header: 'Employee',
+      sortable: true,
+      sortKey: 'name',
       render: (employee) => (
         <div className="flex items-center gap-4 text-left">
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-card shadow-sm ring-1 ring-border group-hover:ring-primary/30 transition-all">
             <img src={employee.avatar} alt={employee.name} className="w-full h-full object-cover" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-left">
             <span className="text-foreground font-semibold">{employee.name}</span>
             <span className="text-[11px] text-muted-foreground font-medium">{employee.role}</span>
           </div>
@@ -151,6 +203,8 @@ export function Employees() {
     },
     {
       header: 'Department',
+      sortable: true,
+      sortKey: 'department',
       render: (employee) => (
         <div className="flex flex-col text-left">
           <span className="text-foreground font-semibold">{employee.department}</span>
@@ -175,6 +229,8 @@ export function Employees() {
     },
     {
       header: 'Location',
+      sortable: true,
+      sortKey: 'location',
       render: (employee) => (
         <div className="flex items-start gap-2 text-[11px] font-medium text-muted-foreground">
           <MapPin className="w-3.5 h-3.5 text-muted-foreground/50 mt-0.5" />
@@ -192,15 +248,35 @@ export function Employees() {
       <PageHeader 
         title="Employee Directory"
         subtitle="Search and find contact information for anyone in the organization."
+        actions={
+          <PageActions 
+            actions={[
+              { 
+                label: 'Export', 
+                variant: 'outline', 
+                icon: <Download className="w-4 h-4" />, 
+                onClick: () => setIsExportModalOpen(true),
+                disabled: selectedIds.length === 0
+              }
+            ]}
+          />
+        }
       />
 
       <DataTable 
-        data={filteredData}
+        data={sortedData}
         columns={columns}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onClearFilters={clearFilters}
         hasActiveFilters={hasActiveFilters}
+        sortOptions={[
+          { label: 'Name', key: 'name' },
+          { label: 'Department', key: 'department' },
+          { label: 'Location', key: 'location' }
+        ]}
+        defaultSort={sortConfig}
+        onSortChange={setSortConfig}
         alphabetFilter={{
           value: alphabetLetter,
           onChange: setAlphabetLetter
@@ -209,10 +285,15 @@ export function Employees() {
         pagination={{
           currentPage: 1,
           totalPages: 1,
-          totalResults: filteredData.length,
+          totalResults: sortedData.length,
           resultsPerPage: 10,
           onPageChange: (page) => console.log('Page change:', page)
         }}
+      />
+
+      <ExportOptionsModal 
+        isOpen={isExportModalOpen} 
+        onClose={() => setIsExportModalOpen(false)} 
       />
     </div>
   );

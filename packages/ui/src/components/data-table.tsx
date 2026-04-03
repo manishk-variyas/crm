@@ -6,8 +6,10 @@ import { AlphabetFilter } from './alphabet-filter';
 import { cn } from '../lib/utils';
 
 export interface Column<T> {
-  header: string;
+  header: React.ReactNode;
   accessorKey?: keyof T;
+  sortKey?: string;
+  sortable?: boolean;
   headerClassName?: string;
   cellClassName?: string;
   align?: 'left' | 'center' | 'right';
@@ -92,47 +94,51 @@ function SortDropdown<T>({
       <Button 
         variant="outline" 
         className={cn(
-          "flex-1 sm:flex-none items-center gap-2 font-medium h-9 text-sm transition-all",
-          isOpen && "bg-muted"
+          "flex items-center gap-2.5 font-bold h-10 px-4 text-[13px] border-border/60 hover:bg-muted transition-all rounded-xl",
+          isOpen && "bg-muted border-primary/20",
+          currentSort && "text-primary border-primary/20 bg-primary/5"
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <ArrowUpDown className="w-3.5 h-3.5" />
-        Sort
+        <ArrowUpDown className={cn("w-3.5 h-3.5", currentSort ? "text-primary" : "text-muted-foreground")} />
+        <span>{currentSort ? `Sorted by: ${options.find(opt => opt.key === currentSort.key)?.label}` : 'Sort'}</span>
       </Button>
       
       {isOpen && (
-        <div className="absolute top-full mt-2 right-0 w-48 bg-card border border-border/60 shadow-lg rounded-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="px-3 py-2 text-[11px] font-bold text-muted-foreground uppercase tracking-wider border-b border-border/40 bg-muted/30">
+        <div className="absolute top-full mt-2 left-0 sm:left-auto sm:right-0 w-56 bg-card border border-border/80 shadow-[0_10px_40px_rgb(0,0,0,0.12)] rounded-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="px-5 py-3.5 text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">
             Sort By
           </div>
-          <div className="flex flex-col p-1.5 gap-0.5">
-            {options.map((option) => (
-              <button
-                key={option.key}
-                onClick={() => {
-                  if (currentSort?.key === option.key) {
-                    onSortChange({ ...currentSort, direction: currentSort.direction === 'asc' ? 'desc' : 'asc' });
-                  } else {
-                    onSortChange({ key: option.key, direction: 'asc' });
-                  }
-                  setIsOpen(false);
-                }}
-                className={cn(
-                  "flex items-center justify-between px-3 py-2 text-[13px] font-medium rounded-lg transition-colors w-full text-left",
-                  currentSort?.key === option.key
-                    ? "bg-blue-50/50 text-blue-600"
-                    : "text-foreground hover:bg-muted"
-                )}
-              >
-                {option.label}
-                {currentSort?.key === option.key && (
-                  <span className="text-blue-600 text-[10px] font-bold">
-                    {currentSort.direction === 'asc' ? '↑' : '↓'}
-                  </span>
-                )}
-              </button>
-            ))}
+          <div className="flex flex-col px-1.5 pb-1.5 gap-0.5">
+            {options.map((option) => {
+              const isActive = currentSort?.key === option.key;
+              return (
+                <button
+                  key={option.key}
+                  onClick={() => {
+                    if (isActive) {
+                      onSortChange({ ...currentSort!, direction: currentSort!.direction === 'asc' ? 'desc' : 'asc' });
+                    } else {
+                      onSortChange({ key: option.key, direction: 'asc' });
+                    }
+                    setIsOpen(false);
+                  }}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-3 text-[14px] font-bold rounded-xl transition-all group w-full text-left",
+                    isActive
+                      ? "bg-primary/5 text-primary"
+                      : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="flex-1">{option.label}</span>
+                  {isActive && (
+                    <span className="text-primary font-bold ml-2">
+                      {currentSort.direction === 'asc' ? '↑' : '↓'}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -158,10 +164,10 @@ function FilterPanel<T>({
     : Object.values(activeFilters || {}).some(v => v && v !== 'all');
   
   return (
-    <div className="px-4 py-3 border-b border-border/50 bg-muted/10 flex flex-wrap items-end gap-4">
+    <div className="px-6 py-6 border-b border-border/50 bg-muted/10 flex flex-wrap items-end gap-x-8 gap-y-6">
       {filters.map((filter) => (
-        <div key={filter.key} className="flex flex-col gap-1 min-w-[140px]">
-          <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+        <div key={filter.key} className="flex flex-col gap-2 min-w-[160px]">
+          <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest px-0.5">
             {filter.label}
           </label>
           {filter.type === 'custom' && filter.render ? (
@@ -170,9 +176,9 @@ function FilterPanel<T>({
             <select
               value={activeFilters?.[filter.key] || 'all'}
               onChange={(e) => onFilterChange(filter.key, e.target.value)}
-              className="h-9 px-3 rounded-lg border border-border/60 bg-background text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer"
+              className="h-10 px-3 rounded-xl border border-border bg-background text-[13px] font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer hover:border-primary/30"
             >
-              <option value="all">All {filter.label}</option>
+              <option value="all">All {filter.label}s</option>
               {filter.options?.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
@@ -183,7 +189,7 @@ function FilterPanel<T>({
               placeholder={filter.placeholder}
               value={activeFilters?.[filter.key] || ''}
               onChange={(e) => onFilterChange(filter.key, e.target.value)}
-              className="h-9 px-3 rounded-lg border border-border/60 bg-background text-sm font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="h-10 px-3 rounded-xl border border-border bg-background text-[13px] font-bold text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all hover:border-primary/30"
             />
           )}
         </div>
@@ -193,10 +199,10 @@ function FilterPanel<T>({
         <button
           type="button"
           onClick={onClearFilters}
-          className="h-9 flex items-center gap-1 text-sm font-semibold text-rose-500 hover:text-rose-600 transition-colors ml-auto"
+          className="h-10 flex items-center gap-2 text-[13px] font-bold text-rose-500 hover:text-rose-600 transition-colors ml-auto bg-rose-50/50 px-4 rounded-xl border border-rose-100 hover:bg-rose-50"
         >
-          <X className="w-3.5 h-3.5" />
-          Clear Filters
+          <X className="w-4 h-4" />
+          Clear All Filters
         </button>
       )}
     </div>
@@ -321,18 +327,50 @@ export function DataTable<T>({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-muted/10 border-b border-border/50 uppercase tracking-wider text-[11px] font-bold text-muted-foreground/70">
-                {columns.map((col, idx) => (
-                  <th 
-                    key={idx} 
-                    className={cn(
-                      "px-6 py-4 font-bold", 
-                      col.align === 'center' ? "text-center" : col.align === 'right' ? "text-right" : "text-left",
-                      col.headerClassName
-                    )}
-                  >
-                    {col.header}
-                  </th>
-                ))}
+                {columns.map((col, idx) => {
+                  const sKey = col.sortKey || (col.accessorKey as string);
+                  const isSortable = col.sortable && sKey;
+                  const isActive = currentSort?.key === sKey;
+                  
+                  return (
+                    <th 
+                      key={idx} 
+                      className={cn(
+                        "px-6 py-4 font-bold select-none", 
+                        col.align === 'center' ? "text-center" : col.align === 'right' ? "text-right" : "text-left",
+                        isSortable && "cursor-pointer hover:text-foreground hover:bg-black/5 transition-colors",
+                        isActive && "text-foreground bg-black/5",
+                        col.headerClassName
+                      )}
+                      onClick={() => {
+                        if (isSortable) {
+                          handleSortChange({
+                            key: sKey,
+                            direction: isActive && currentSort?.direction === 'asc' ? 'desc' : 'asc'
+                          });
+                        }
+                      }}
+                    >
+                      <div className={cn(
+                        "flex items-center gap-2",
+                        col.align === 'center' ? "justify-center" : col.align === 'right' ? "justify-end" : "justify-start"
+                      )}>
+                        {col.header}
+                        {isSortable && (
+                          <div className="flex flex-col">
+                            {isActive ? (
+                              currentSort?.direction === 'asc' ? 
+                                <span className="text-primary leading-none text-[10px]">↑</span> : 
+                                <span className="text-primary leading-none text-[10px]">↓</span>
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 opacity-30" />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20 text-[13px]">

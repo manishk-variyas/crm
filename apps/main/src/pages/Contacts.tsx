@@ -19,7 +19,8 @@ import {
   Share2,
   ChevronDown
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, DataTable, Column, Modal, SortOption, FilterConfig, PageActions, FormInput, FormSelect, FormTextarea } from '@crm/ui';
+import { Button, Badge, cn, PageHeader, DataTable, Column, Modal, SortOption, FilterConfig, PageActions, FormInput, FormSelect, FormTextarea, ExportOptionsModal } from '@crm/ui';
+import { ContactModal, ContactDetailModal } from '../components/Contacts/modals';
 
 interface Contact {
   id: string;
@@ -169,244 +170,6 @@ function ActionMenu({ contact, onEdit }: { contact: Contact, onEdit: (contact: C
   );
 }
 
-function ContactModal({ contact, onClose }: { contact?: Contact | null, onClose: () => void }) {
-  const isEditing = !!contact;
-
-  return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      title={isEditing ? 'Edit Customer Contact' : 'Add New Customer Contact'}
-      description={isEditing ? 'Update the details for this customer contact.' : 'Enter the details for the new customer contact.'}
-      className="max-w-2xl"
-      footer={
-        <div className="flex items-center justify-end gap-3 w-full">
-          <Button variant="outline" onClick={onClose} className="h-10 px-6 font-bold text-[13px]">
-            Cancel
-          </Button>
-          <Button onClick={onClose}
-          >
-            {isEditing ? 'Update Customer Contact' : 'Create Customer Contact'}
-          </Button>
-        </div>
-      }
-    >
-      <div className="space-y-10 pb-4">
-        {/* Personal Details */}
-        <div className="space-y-5">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Personal Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-            <FormInput
-              label="Full Name"
-              defaultValue={contact?.name || ''}
-              placeholder="Alice Abernathy"
-              icon={<User />}
-            />
-            <FormInput
-              label="Designation"
-              defaultValue={contact?.title || ''}
-              placeholder="Head of Security"
-            />
-            <FormSelect
-              label="Role Type"
-              defaultValue={contact?.role || 'Influencer'}
-              options={[
-                { value: 'Influencer', label: 'Influencer' },
-                { value: 'Decision Maker', label: 'Decision Maker' },
-                { value: 'Gatekeeper', label: 'Gatekeeper' },
-                { value: 'End User', label: 'End User' },
-              ]}
-            />
-            <FormInput
-              label="Account"
-              defaultValue={contact?.account || ''}
-              placeholder="Umbrella Corporation"
-              icon={<Building2 />}
-            />
-          </div>
-        </div>
-
-        {/* Contact Details */}
-        <div className="space-y-5 pt-2 border-t border-border/40">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Contact Details</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-            <FormInput
-              label="Email"
-              defaultValue={contact?.email || ''}
-              placeholder="alice@umbrella.com"
-              icon={<Mail />}
-            />
-            <FormInput
-              label="Phone"
-              defaultValue={contact?.phone || ''}
-              placeholder="+1 (555) 666-6666"
-              icon={<Phone />}
-            />
-            <FormInput
-              label="Mobile Number"
-              placeholder="+1 (555) 000-0000"
-              icon={<Smartphone />}
-            />
-            <FormInput
-              label="Alternate Contact"
-              placeholder="+1 (555) 000-0000"
-            />
-            <FormInput
-              label="Desk / VoIP Phone No."
-              placeholder="+1 (555) 000-0000"
-              icon={<Phone />}
-            />
-            <FormInput
-              label="Location"
-              placeholder="Raccoon City"
-              icon={<MapPin />}
-            />
-            <FormSelect
-              label="Reports To"
-              options={[
-                { value: '', label: 'None (Top Level)' },
-                { value: '1', label: 'Bruce Wayne' },
-                { value: '2', label: 'Tony Stark' },
-              ]}
-            />
-          </div>
-        </div>
-
-        {/* Office Details */}
-        <div className="space-y-5 pt-2 border-t border-border/40">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Office Details</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-            <FormInput
-              label="Desk Number"
-              placeholder="e.g. D-402"
-            />
-            <FormInput
-              label="Bay / Workspace Location"
-              placeholder="e.g. Building A, Floor 4"
-              icon={<MapPin />}
-            />
-            <div className="col-span-1 md:col-span-2">
-              <FormInput
-                label="Office Address"
-                placeholder="Full office address"
-                icon={<Building2 />}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </Modal>
-  );
-}
-
-function ContactDetailModal({ contact, onClose, onEdit }: { contact: Contact, onClose: () => void, onEdit: (contact: Contact) => void }) {
-  return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      className="max-w-2xl"
-      title={
-        <div className="flex items-center gap-4">
-          <div className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-sm border border-white/50",
-            contact.avatarColor
-          )}>
-            {contact.name.charAt(0)}
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <h2 className="text-xl font-bold text-foreground">{contact.name}</h2>
-            <p className="text-[13px] font-medium text-muted-foreground">{contact.title} at {contact.account}</p>
-          </div>
-        </div>
-      }
-      footer={
-        <div className="flex items-center justify-end gap-3 w-full">
-          <Button variant="outline" onClick={onClose} className="h-10 px-6 font-bold text-[13px]">
-            Close
-          </Button>
-          <Button onClick={() => onEdit(contact)}
-          >
-            Edit Customer Contact
-          </Button>
-        </div>
-      }
-    >
-      <div className="space-y-10 pb-4">
-        {/* Contact Details Section */}
-        <div className="space-y-5">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Contact Details</h3>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-1.5">
-              <p className="text-[12px] font-medium text-muted-foreground">Role</p>
-              <Badge variant="secondary" className="bg-muted text-muted-foreground border-none font-bold px-3 py-1 text-[11px]">
-                {contact.role}
-              </Badge>
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-[12px] font-medium text-muted-foreground">Account</p>
-              <div className="flex items-center gap-2 text-[14px] font-bold text-foreground">
-                <Building2 className="w-4 h-4 text-muted-foreground/60" />
-                {contact.account}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Information Section */}
-        <div className="space-y-5 pt-2 border-t border-border/40">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Contact Information</h3>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-1.5">
-              <p className="text-[12px] font-medium text-muted-foreground">Email</p>
-              <a href={`mailto:${contact.email}`} className="flex items-center gap-2 text-[14px] font-bold text-primary hover:underline underline-offset-4">
-                <Mail className="w-4 h-4" />
-                {contact.email}
-              </a>
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-[12px] font-medium text-muted-foreground">Phone</p>
-              <a href={`tel:${contact.phone.replace(/[^0-9+]/g, '')}`} className="flex items-center gap-2 text-[14px] font-bold text-primary hover:underline underline-offset-4">
-                <Phone className="w-4 h-4" />
-                {contact.phone}
-              </a>
-            </div>
-            <div className="space-y-1.5 col-span-2">
-              <p className="text-[12px] font-medium text-muted-foreground">Location</p>
-              <div className="flex items-center gap-2 text-[14px] font-bold text-foreground">
-                <MapPin className="w-4 h-4 text-muted-foreground/60" />
-                Raccoon City
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Office Details Section */}
-        <div className="space-y-5 pt-2 border-t border-border/40">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Office Details</h3>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-1.5">
-              <p className="text-[12px] font-medium text-muted-foreground">Desk Number</p>
-              <p className="text-[14px] font-bold text-foreground">--</p>
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-[12px] font-medium text-muted-foreground">Bay / Workspace</p>
-              <p className="text-[14px] font-bold text-foreground">--</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Activity Section */}
-        <div className="space-y-5 pt-2 border-t border-border/40">
-          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.1em]">Activity</h3>
-          <div className="space-y-1.5">
-            <p className="text-[12px] font-medium text-muted-foreground">Last Activity</p>
-            <p className="text-[14px] font-bold text-foreground">{contact.lastActivity}</p>
-          </div>
-        </div>
-      </div>
-    </Modal>
-  );
-}
 
 const sortOptions: SortOption[] = [
   { label: 'Name', key: 'name' },
@@ -477,6 +240,8 @@ export function Contacts() {
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [alphabetLetter, setAlphabetLetter] = useState('');
 
   const hasActiveFilters =
@@ -499,6 +264,21 @@ export function Contacts() {
 
   const handleFilterChange = (key: string, value: string) => {
     setActiveFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const toggleSelection = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    if (selectedIds.length === filteredData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredData.map(contact => contact.id));
+    }
   };
 
   const filteredData = CONTACTS.filter((contact) => {
@@ -556,12 +336,31 @@ export function Contacts() {
 
   const columns: Column<Contact>[] = [
     {
-      header: '',
-      headerClassName: 'w-12',
-      render: () => <input type="checkbox" className="rounded border-border bg-muted text-primary focus:ring-primary" />
+      header: (
+        <input 
+          type="checkbox" 
+          checked={selectedIds.length === filteredData.length && filteredData.length > 0}
+          onChange={(e) => { e.stopPropagation(); toggleAllSelection(); }}
+          onClick={(e) => e.stopPropagation()}
+          className="w-4 h-4 rounded border-border bg-background checked:bg-primary transition-all cursor-pointer"
+        />
+      ),
+      headerClassName: 'w-12 px-4',
+      cellClassName: 'px-4',
+      render: (contact) => (
+        <input 
+          type="checkbox" 
+          checked={selectedIds.includes(contact.id)}
+          onChange={() => {}}
+          onClick={(e) => toggleSelection(contact.id, e as any)}
+          className="w-4 h-4 rounded border-border bg-background checked:bg-primary transition-all cursor-pointer"
+        />
+      )
     },
     {
       header: 'Name',
+      sortable: true,
+      sortKey: 'name',
       render: (contact) => (
         <div className="flex items-center gap-4 text-left">
           <div className={cn(
@@ -584,6 +383,8 @@ export function Contacts() {
     },
     {
       header: 'Account',
+      sortable: true,
+      sortKey: 'account',
       render: (contact) => (
         <div className="flex items-center gap-2 text-muted-foreground font-medium">
           <div className="w-6 h-6 rounded bg-muted flex items-center justify-center text-muted-foreground/50 shrink-0">
@@ -595,6 +396,8 @@ export function Contacts() {
     },
     {
       header: 'Role',
+      sortable: true,
+      sortKey: 'role',
       render: (contact) => (
         <Badge variant="secondary" className="bg-muted text-muted-foreground border-none font-bold px-2.5 py-1 text-[11px]">
           {contact.role}
@@ -618,6 +421,8 @@ export function Contacts() {
     },
     {
       header: 'Last Activity',
+      sortable: true,
+      sortKey: 'lastActivity',
       render: (contact) => (
         <span className="text-muted-foreground/70 font-medium whitespace-nowrap">
           {contact.lastActivity}
@@ -633,13 +438,19 @@ export function Contacts() {
 
   return (
     <div className="animate-in fade-in duration-500">
-      <PageHeader
+      <PageHeader 
         title="Customer Contacts"
         subtitle="Manage your key customer contacts and relationships."
         actions={
-          <PageActions
+          <PageActions 
             actions={[
-              { label: 'Export', variant: 'outline', icon: <Download className="w-4 h-4" />, onClick: () => {} },
+              { 
+                label: 'Export', 
+                variant: 'outline', 
+                icon: <Download className="w-4 h-4" />, 
+                onClick: () => setIsExportModalOpen(true),
+                disabled: selectedIds.length === 0
+              },
               { label: 'Add Customer Contact', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
             ]}
           />
@@ -694,6 +505,11 @@ export function Contacts() {
           }}
         />
       )}
+
+      <ExportOptionsModal 
+        isOpen={isExportModalOpen} 
+        onClose={() => setIsExportModalOpen(false)} 
+      />
     </div>
   );
 }

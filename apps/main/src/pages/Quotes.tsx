@@ -4,6 +4,7 @@
  * @route /quotes
  */
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   FileText, 
   Download, 
@@ -44,6 +45,7 @@ const QUOTES: Quote[] = [
 ];
 
 export function Quotes() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [alphabetLetter, setAlphabetLetter] = useState('');
 
@@ -157,7 +159,7 @@ export function Quotes() {
           <PageActions
             actions={[
               { label: 'Export', variant: 'outline', icon: <Download className="w-4 h-4" />, onClick: () => {} },
-              { label: 'Create Quote', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => {} }
+              { label: 'Create Quote', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => navigate('/quotes/create') }
             ]}
           />
         }
