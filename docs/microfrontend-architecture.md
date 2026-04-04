@@ -62,11 +62,43 @@ graph TB
 | `main` | 3001 | `./App` | `/dashboard`, `/accounts`, `/contacts`, `/opportunities`, `/pipeline`, `/quotes`, `/tasks`, `/reports`, `/settings`, `/directory` |
 | `auth` | 3002 | `./App` | `/login` |
 
+#### Main App Component Organization
+
+The main app organizes page-specific components under `src/components/` by feature:
+
+```
+apps/main/src/
+├── pages/                    # Page-level components
+│   ├── Accounts.tsx
+│   ├── Contacts.tsx
+│   ├── Opportunities.tsx
+│   └── ...
+└── components/                # Feature-specific components
+    ├── Accounts/
+    │   └── modals/           # Account-related modals
+    │       ├── AccountModal.tsx
+    │       ├── AccountDetailModal.tsx
+    │       ├── OwnerProfileModal.tsx
+    │       └── index.ts
+    ├── Contacts/
+    │   └── modals/           # Contact-related modals
+    │       ├── ContactModal.tsx
+    │       ├── ContactDetailModal.tsx
+    │       └── index.ts
+    └── Opportunities/
+        └── modals/           # Opportunity-related modals
+            ├── OpportunityModal.tsx
+            ├── OpportunityQuickViewModal.tsx
+            └── index.ts
+```
+
+This structure makes it clear which components belong to which page.
+
 ### 3. Shared Packages
 
 | Package | Purpose |
 |---------|---------|
-| `@crm/ui` | Reusable UI components (Button, Card, Sidebar, Header, Charts) |
+| `@crm/ui` | Reusable UI components (Button, Card, Sidebar, Header, Charts, FormInput, FormSelect, Tabs, StatusBadge, PageActions, FilterBar) |
 | `@crm/store` | Global state (theme, sidebar, notifications) via Zustand |
 | `@crm/utils` | Custom hooks (useDebounce, useLocalStorage, useFetch) and formatters |
 

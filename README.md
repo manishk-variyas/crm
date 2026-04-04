@@ -9,6 +9,12 @@ crm/
 ├── apps/
 │   ├── shell/          Host application (orchestrates all MFEs)
 │   ├── main/           Main CRM app - Dashboard, Accounts, Contacts, etc.
+│   │   └── src/
+│   │       ├── pages/         Page components (Accounts.tsx, Contacts.tsx, etc.)
+│   │       └── components/    Page-specific components grouped by feature
+│   │           ├── Accounts/modals/
+│   │           ├── Contacts/modals/
+│   │           └── Opportunities/modals/
 │   └── auth/           Authentication - Login page (protected)
 ├── packages/
 │   ├── ui/             Shared UI components (Button, Card, Sidebar, Charts, Forms)
