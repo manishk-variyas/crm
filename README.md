@@ -142,3 +142,66 @@ scp -r apps/auth/dist user@server:/var/www/crm-auth/
 - [Microfrontend Architecture](./docs/microfrontend-architecture.md) - Architecture overview
 - [Deployment Strategy](./docs/deployment-strategy.md) - Deployment options comparison
 - [Nginx Config](./docs/deployment/nginx-simple.conf) - Simple nginx deployment
+
+## Mock API (Development)
+
+This project includes a Mockoon environment file for API mocking during development.
+
+### Setup Mockoon
+
+1. Download and install [Mockoon](https://mockoon.com/download/)
+2. Open Mockoon and go to **File → Import Environment**
+3. Select `mock/crm-api.json`
+4. Click the **Play** button to start the mock server on `http://localhost:3005`
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/accounts` | GET | List all accounts |
+| `/api/accounts` | POST | Create account |
+| `/api/accounts/:id` | GET | Get account details |
+| `/api/accounts/:id` | PUT | Update account |
+| `/api/accounts/:id` | DELETE | Delete account |
+| `/api/contacts` | GET | List all contacts |
+| `/api/contacts` | POST | Create contact |
+| `/api/contacts/:id` | GET | Get contact details |
+| `/api/opportunities` | GET | List all opportunities |
+| `/api/opportunities` | POST | Create opportunity |
+| `/api/tasks` | GET | List all tasks |
+| `/api/dashboard/stats` | GET | Dashboard statistics |
+
+### Using the API in Code
+
+The project includes API services and hooks for easy integration:
+
+```tsx
+// Using the hooks (recommended)
+import { useAccounts, useContacts, useOpportunities } from '@crm/services/hooks';
+
+function AccountsPage() {
+  const { accounts, loading, error, refetch } = useAccounts({ autoFetch: false });
+  
+  // Your component code...
+}
+
+// Or using the API services directly
+import { getAccounts, createAccount, updateAccount } from '@crm/services/api';
+
+const accounts = await getAccounts();
+const newAccount = await createAccount({ name: 'New Company' });
+```
+
+### Switching Between Mock and Real API
+
+The API base URL is configured via environment variable:
+
+```bash
+# Use Mockoon (default)
+VITE_API_URL=http://localhost:3005 pnpm dev:shell
+
+# Or in .env file
+VITE_API_URL=http://localhost:3005
+```
+
+To switch to a real backend, update the URL in your environment config.

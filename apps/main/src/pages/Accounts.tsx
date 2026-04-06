@@ -23,10 +23,12 @@ import {
   Globe,
   UserPlus,
   Activity,
-  X
+  X,
+  RefreshCw
 } from 'lucide-react';
 import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, Modal, StatusBadge, getStatusVariant, PageActions, FormInput, FormSelect, FormTextarea, Tabs, ExportOptionsModal } from '@crm/ui';
 import { AccountModal, AccountDetailModal, OwnerProfileModal } from '../components/Accounts/modals';
+import { useAccounts } from '../services/hooks';
 
 interface Account {
   id: string;
@@ -39,48 +41,7 @@ interface Account {
   lastActivity: string;
 }
 
-const ACCOUNTS: Account[] = [
-  {
-    id: '1',
-    name: 'Cyberdyne Systems',
-    website: 'www.cyberdyne.com',
-    owner: 'Alex Morgan',
-    industry: 'Technology',
-    status: 'active',
-    revenue: '$1.2B',
-    lastActivity: '2 days ago'
-  },
-  {
-    id: '2',
-    name: 'Massive Dynamic',
-    website: 'www.massivedynamic.com',
-    owner: 'Alex Morgan',
-    industry: 'Technology',
-    status: 'churned',
-    revenue: '$3.5B',
-    lastActivity: '3 months ago'
-  },
-  {
-    id: '3',
-    name: 'Umbrella Corporation',
-    website: 'www.umbrella.com',
-    owner: 'Alex Morgan',
-    industry: 'Healthcare',
-    status: 'prospect',
-    revenue: '$900.0M',
-    lastActivity: '5 days ago'
-  },
-  {
-    id: '4',
-    name: 'Wayne Enterprises',
-    website: 'www.wayne.com',
-    owner: 'Alex Morgan',
-    industry: 'Technology',
-    status: 'active',
-    revenue: '$5.0B',
-    lastActivity: '1 week ago'
-  }
-];
+
 
 const sortOptions: SortOption[] = [
   { label: 'Name', key: 'name' },
@@ -245,6 +206,7 @@ function ActionMenu({ account, onEdit }: { account: Account, onEdit: (account: A
 
 
 export function Accounts() {
+  const { accounts, loading, error, refetch } = useAccounts();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>({ status: 'all', industry: 'all', owner: 'all', lastActivityUnit: 'days' });
@@ -255,6 +217,8 @@ export function Accounts() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [viewingOwner, setViewingOwner] = useState<string | null>(null);
   const [alphabetLetter, setAlphabetLetter] = useState('');
+
+  const accountsData = accounts;
 
   const hasActiveFilters =
     (activeFilters.status && activeFilters.status !== 'all') ||
@@ -299,7 +263,7 @@ export function Accounts() {
     }
   };
 
-  const filteredData = ACCOUNTS.filter((account) => {
+  const filteredData = accountsData.filter((account) => {
     const matchesSearch = !searchTerm ||
       account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       account.industry.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -480,18 +444,30 @@ export function Accounts() {
           </>
         }
         actions={
-          <PageActions
-            actions={[
-              { 
-                label: 'Export', 
-                variant: 'outline', 
-                icon: <Download className="w-4 h-4" />, 
-                onClick: () => setIsExportModalOpen(true),
-                disabled: selectedIds.length === 0
-              },
-              { label: 'Add Account', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            {accounts.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="h-9 px-3"
+              >
+                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              </Button>
+            )}
+            <PageActions
+              actions={[
+                { 
+                  label: 'Export', 
+                  variant: 'outline', 
+                  icon: <Download className="w-4 h-4" />, 
+                  onClick: () => setIsExportModalOpen(true),
+                  disabled: selectedIds.length === 0
+                },
+                { label: 'Add Account', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
+              ]}
+            />
+          </div>
         }
       />
 
@@ -513,7 +489,7 @@ export function Accounts() {
           value: alphabetLetter,
           onChange: setAlphabetLetter
         }}
-        emptyMessage="No accounts match the current filters."
+        emptyMessage={loading ? "Loading accounts..." : error ? `Error: ${error}` : "No accounts match the current filters."}
         pagination={{
           currentPage: 1,
           totalPages: 1,

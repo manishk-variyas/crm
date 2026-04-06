@@ -178,7 +178,7 @@ function FilterPanel<T>({
               onChange={(e) => onFilterChange(filter.key, e.target.value)}
               className="h-10 px-3 rounded-xl border border-border bg-background text-[13px] font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer hover:border-primary/30"
             >
-              <option value="all">All {filter.label}s</option>
+              <option value="all">All {filter.label}</option>
               {filter.options?.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
@@ -195,16 +195,18 @@ function FilterPanel<T>({
         </div>
       ))}
       
-      {isFiltered && onClearFilters && (
-        <button
-          type="button"
-          onClick={onClearFilters}
-          className="h-10 flex items-center gap-2 text-[13px] font-bold text-rose-500 hover:text-rose-600 transition-colors ml-auto bg-rose-50/50 px-4 rounded-xl border border-rose-100 hover:bg-rose-50"
-        >
-          <X className="w-4 h-4" />
-          Clear All Filters
-        </button>
-      )}
+      <div className="flex-1 flex justify-end">
+        {isFiltered && onClearFilters && (
+          <button
+            type="button"
+            onClick={onClearFilters}
+            className="h-10 flex items-center gap-2 text-[13px] font-bold text-rose-500 dark:text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 transition-colors bg-rose-50/50 dark:bg-rose-500/10 px-4 rounded-xl border border-rose-100 dark:border-rose-500/20 hover:bg-rose-50 dark:hover:bg-rose-500/20"
+          >
+            <X className="w-4 h-4" />
+            Clear All
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -301,7 +303,7 @@ export function DataTable<T>({
           <div
             className={cn(
               "overflow-hidden transition-all duration-300 ease-in-out",
-              showFilterPanel ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+              showFilterPanel ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
             )}
           >
             <FilterPanel

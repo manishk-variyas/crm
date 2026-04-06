@@ -7,10 +7,12 @@ import React, { useState } from 'react';
 import { 
   Mail, 
   Phone,
-  MapPin
+  MapPin,
+  RefreshCw
 } from 'lucide-react';
 import { Download } from 'lucide-react';
-import { PageHeader, DataTable, Column, PageActions, ExportOptionsModal } from '@crm/ui';
+import { Button, cn, PageHeader, DataTable, Column, PageActions, ExportOptionsModal } from '@crm/ui';
+import { useEmployees } from '../services/hooks';
 
 interface Employee {
   id: string;
@@ -113,11 +115,14 @@ const EMPLOYEES: Employee[] = [
 ];
 
 export function Employees() {
+  const { employees, loading, error, refetch } = useEmployees();
   const [searchTerm, setSearchTerm] = useState('');
   const [alphabetLetter, setAlphabetLetter] = useState('');
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
+
+  const employeesData = employees.length > 0 ? employees : EMPLOYEES;
 
   const toggleSelection = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -134,7 +139,7 @@ export function Employees() {
     }
   };
 
-  const filteredData = EMPLOYEES.filter((employee) => {
+  const filteredData = employeesData.filter((employee) => {
     const matchesSearch = !searchTerm ||
       employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -249,17 +254,29 @@ export function Employees() {
         title="Employee Directory"
         subtitle="Search and find contact information for anyone in the organization."
         actions={
-          <PageActions 
-            actions={[
-              { 
-                label: 'Export', 
-                variant: 'outline', 
-                icon: <Download className="w-4 h-4" />, 
-                onClick: () => setIsExportModalOpen(true),
-                disabled: selectedIds.length === 0
-              }
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            {employees.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="h-9 px-3"
+              >
+                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              </Button>
+            )}
+            <PageActions 
+              actions={[
+                { 
+                  label: 'Export', 
+                  variant: 'outline', 
+                  icon: <Download className="w-4 h-4" />, 
+                  onClick: () => setIsExportModalOpen(true),
+                  disabled: selectedIds.length === 0
+                }
+              ]}
+            />
+          </div>
         }
       />
 
@@ -289,6 +306,7 @@ export function Employees() {
           resultsPerPage: 10,
           onPageChange: (page) => console.log('Page change:', page)
         }}
+        emptyMessage={loading ? "Loading employees..." : error ? `Error: ${error}` : "No employees found."}
       />
 
       <ExportOptionsModal 

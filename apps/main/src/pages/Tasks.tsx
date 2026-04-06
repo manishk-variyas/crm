@@ -16,9 +16,11 @@ import {
   ChevronRight,
   Search,
   Save,
-  X
+  X,
+  RefreshCw
 } from 'lucide-react';
 import { Button, Badge, cn, PageHeader, DataTable, Column, PageActions, Modal, FormInput, FormSelect, FormTextarea } from '@crm/ui';
+import { useTasks } from '../services/hooks';
 
 interface Task {
   id: string;
@@ -96,13 +98,16 @@ const TASKS: Task[] = [
 ];
 
 export function Tasks() {
+  const { tasks, loading, error, refetch } = useTasks();
   const [searchTerm, setSearchTerm] = useState('');
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [alphabetLetter, setAlphabetLetter] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  const filteredData = TASKS.filter((task) => {
+  const tasksData = tasks.length > 0 ? tasks : TASKS;
+
+  const filteredData = tasksData.filter((task) => {
     const matchesSearch = !searchTerm ||
       task.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -228,24 +233,36 @@ export function Tasks() {
         title="Tasks"
         subtitle="Manage your daily to-dos and follow-ups."
         actions={
-          <PageActions 
-            actions={[
-              { 
-                label: 'List', 
-                variant: view === 'list' ? 'primary' : 'outline', 
-                icon: <LayoutList className="w-4 h-4" />, 
-                onClick: () => setView('list'),
-              },
-              { 
-                label: 'Calendar', 
-                variant: view === 'calendar' ? 'primary' : 'outline', 
-                icon: <CalendarIcon className="w-4 h-4" />, 
-                onClick: () => setView('calendar'),
-              },
-              { label: 'Export', variant: 'outline', icon: <Share2 className="w-4 h-4" />, onClick: () => {} },
-              { label: 'Add Task', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            {tasks.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="h-9 px-3"
+              >
+                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              </Button>
+            )}
+            <PageActions 
+              actions={[
+                { 
+                  label: 'List', 
+                  variant: view === 'list' ? 'primary' : 'outline', 
+                  icon: <LayoutList className="w-4 h-4" />, 
+                  onClick: () => setView('list'),
+                },
+                { 
+                  label: 'Calendar', 
+                  variant: view === 'calendar' ? 'primary' : 'outline', 
+                  icon: <CalendarIcon className="w-4 h-4" />, 
+                  onClick: () => setView('calendar'),
+                },
+                { label: 'Export', variant: 'outline', icon: <Share2 className="w-4 h-4" />, onClick: () => {} },
+                { label: 'Add Task', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
+              ]}
+            />
+          </div>
         }
       />
 
@@ -270,6 +287,7 @@ export function Tasks() {
             onPageChange: (page) => console.log('Page change:', page)
           }}
           onRowClick={(task) => setEditingTask(task)}
+          emptyMessage={loading ? "Loading tasks..." : error ? `Error: ${error}` : "No tasks found."}
         />
       ) : (
         <CalendarView onAddTask={() => setIsAddModalOpen(true)} />

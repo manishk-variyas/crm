@@ -17,10 +17,12 @@ import {
   ChevronRight,
   Edit,
   Share2,
-  ChevronDown
+  ChevronDown,
+  RefreshCw
 } from 'lucide-react';
 import { Button, Badge, cn, PageHeader, DataTable, Column, Modal, SortOption, FilterConfig, PageActions, FormInput, FormSelect, FormTextarea, ExportOptionsModal } from '@crm/ui';
 import { ContactModal, ContactDetailModal } from '../components/Contacts/modals';
+import { useContacts } from '../services/hooks';
 
 interface Contact {
   id: string;
@@ -34,85 +36,7 @@ interface Contact {
   avatarColor: string;
 }
 
-const CONTACTS: Contact[] = [
-  {
-    id: '1',
-    name: 'Alice Abernathy',
-    title: 'Head of Security',
-    account: 'Umbrella Corporation',
-    role: 'Influencer',
-    email: 'alice@umbrella.com',
-    phone: '+1 (555) 666-6666',
-    lastActivity: '5 days ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  },
-  {
-    id: '2',
-    name: 'Bruce Wayne',
-    title: 'CEO',
-    account: 'Wayne Enterprises',
-    role: 'Decision Maker',
-    email: 'bruce@wayne.com',
-    phone: '+1 (555) 987-6543',
-    lastActivity: '1 week ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  },
-  {
-    id: '3',
-    name: 'Griphook',
-    title: 'Senior Banker',
-    account: 'Gringotts Wizarding Bank',
-    role: 'Gatekeeper',
-    email: 'griphook@gringotts.com',
-    phone: '+44 (20) 7946 0123',
-    lastActivity: '1 month ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  },
-  {
-    id: '4',
-    name: 'Sarah Connor',
-    title: 'CTO',
-    account: 'Cyberdyne Systems',
-    role: 'Decision Maker',
-    email: 'sarah@cyberdyne.com',
-    phone: '+1 (555) 123-4567',
-    lastActivity: '2 days ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  },
-  {
-    id: '5',
-    name: 'Tony Stark',
-    title: 'Owner',
-    account: 'Stark Industries',
-    role: 'Decision Maker',
-    email: 'tony@stark.com',
-    phone: '+1 (555) 777-7777',
-    lastActivity: '3 days ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  },
-  {
-    id: '6',
-    name: 'Wile E. Coyote',
-    title: 'Chief Engineer',
-    account: 'Acme Corp',
-    role: 'End User',
-    email: 'coyote@acme.com',
-    phone: '+1 (555) 222-2222',
-    lastActivity: '2 weeks ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  },
-  {
-    id: '7',
-    name: 'William Bell',
-    title: 'Founder',
-    account: 'Massive Dynamic',
-    role: 'Decision Maker',
-    email: 'bell@massivedynamic.com',
-    phone: '+1 (555) 444-4444',
-    lastActivity: '3 months ago',
-    avatarColor: 'bg-primary/10 text-primary',
-  }
-];
+
 
 function ActionMenu({ contact, onEdit }: { contact: Contact, onEdit: (contact: Contact) => void }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -234,6 +158,7 @@ const filterConfigs: FilterConfig[] = [
 ];
 
 export function Contacts() {
+  const { contacts, loading, error, refetch } = useContacts();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>({ role: 'all', account: 'all', lastActivityUnit: 'days' });
@@ -243,6 +168,8 @@ export function Contacts() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [alphabetLetter, setAlphabetLetter] = useState('');
+
+  const contactsData = contacts;
 
   const hasActiveFilters =
     (activeFilters.role && activeFilters.role !== 'all') ||
@@ -281,7 +208,7 @@ export function Contacts() {
     }
   };
 
-  const filteredData = CONTACTS.filter((contact) => {
+  const filteredData = contactsData.filter((contact) => {
     const matchesSearch = !searchTerm ||
       contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.account.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -442,18 +369,30 @@ export function Contacts() {
         title="Customer Contacts"
         subtitle="Manage your key customer contacts and relationships."
         actions={
-          <PageActions 
-            actions={[
-              { 
-                label: 'Export', 
-                variant: 'outline', 
-                icon: <Download className="w-4 h-4" />, 
-                onClick: () => setIsExportModalOpen(true),
-                disabled: selectedIds.length === 0
-              },
-              { label: 'Add Customer Contact', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            {contacts.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="h-9 px-3"
+              >
+                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              </Button>
+            )}
+            <PageActions 
+              actions={[
+                { 
+                  label: 'Export', 
+                  variant: 'outline', 
+                  icon: <Download className="w-4 h-4" />, 
+                  onClick: () => setIsExportModalOpen(true),
+                  disabled: selectedIds.length === 0
+                },
+                { label: 'Add Customer Contact', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
+              ]}
+            />
+          </div>
         }
       />
 
@@ -471,7 +410,7 @@ export function Contacts() {
         onFilterChange={handleFilterChange}
         onClearFilters={clearFilters}
         hasActiveFilters={hasActiveFilters}
-        emptyMessage="No contacts match the current filters."
+        emptyMessage={loading ? "Loading contacts..." : error ? `Error: ${error}` : "No contacts match the current filters."}
         alphabetFilter={{
           value: alphabetLetter,
           onChange: setAlphabetLetter

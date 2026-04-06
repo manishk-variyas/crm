@@ -12,9 +12,11 @@ import {
   Copy,
   FileDown,
   Pencil,
-  Trash2
+  Trash2,
+  RefreshCw
 } from 'lucide-react';
 import { Button, Badge, cn, PageHeader, DataTable, Column, PageActions } from '@crm/ui';
+import { useQuotes } from '../services/hooks';
 
 interface Quote {
   id: string;
@@ -45,11 +47,14 @@ const QUOTES: Quote[] = [
 ];
 
 export function Quotes() {
+  const { quotes, loading, error, refetch } = useQuotes();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [alphabetLetter, setAlphabetLetter] = useState('');
 
-  const filteredData = QUOTES.filter((quote) => {
+  const quotesData = quotes.length > 0 ? quotes : QUOTES;
+
+  const filteredData = quotesData.filter((quote) => {
     const matchesSearch = !searchTerm ||
       quote.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       quote.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -156,12 +161,24 @@ export function Quotes() {
         title="Quotes"
         subtitle="Manage sales quotes and proposals."
         actions={
-          <PageActions
-            actions={[
-              { label: 'Export', variant: 'outline', icon: <Download className="w-4 h-4" />, onClick: () => {} },
-              { label: 'Create Quote', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => navigate('/quotes/create') }
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            {quotes.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="h-9 px-3"
+              >
+                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              </Button>
+            )}
+            <PageActions
+              actions={[
+                { label: 'Export', variant: 'outline', icon: <Download className="w-4 h-4" />, onClick: () => {} },
+                { label: 'Create Quote', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => navigate('/quotes/create') }
+              ]}
+            />
+          </div>
         }
       />
 
@@ -184,6 +201,7 @@ export function Quotes() {
           resultsPerPage: 10,
           onPageChange: (page) => console.log('Page change:', page)
         }}
+        emptyMessage={loading ? "Loading quotes..." : error ? `Error: ${error}` : "No quotes found."}
       />
     </div>
   );

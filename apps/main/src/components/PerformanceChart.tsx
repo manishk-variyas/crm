@@ -4,12 +4,15 @@
  */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, BarChart } from '@crm/ui';
+import { useDashboard } from '../services/hooks';
 
 export function PerformanceChart() {
+  const { stats, loading } = useDashboard();
+
   const data = [
     { name: 'Jan', revenue: 4000, target: 2400 },
     { name: 'Feb', revenue: 3000, target: 1398 },
-    { name: 'Mar', revenue: 2000, target: 9800 },
+    { name: 'Mar', revenue: stats ? parseFloat(stats.totalRevenue.replace(/[^0-9.]/g, '')) : 2000, target: 9800 },
     { name: 'Apr', revenue: 2780, target: 3908 },
     { name: 'May', revenue: 1890, target: 4800 },
     { name: 'Jun', revenue: 2390, target: 3800 },
@@ -22,16 +25,24 @@ export function PerformanceChart() {
         <CardTitle className="text-base font-semibold">My Performance vs Quota</CardTitle>
         <div className="text-muted-foreground/50 font-bold tracking-wider leading-none">...</div>
       </CardHeader>
-      <CardContent className="pt-6">
-        <BarChart 
-          data={data} 
-          xAxisKey="name" 
-          bars={[
-            { key: 'target', color: '#e2e8f0', name: 'Target' },
-            { key: 'revenue', color: '#7c3aed', name: 'Revenue' }
-          ]}
-          height={300}
-        />
+      <CardContent className="pt-6 min-h-[300px]">
+        {loading ? (
+          <div className="flex items-center justify-center h-[300px]">
+            <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full"></div>
+          </div>
+        ) : (
+          <div className="h-[300px]">
+            <BarChart 
+              data={data} 
+              xAxisKey="name" 
+              bars={[
+                { key: 'target', color: '#e2e8f0', name: 'Target' },
+                { key: 'revenue', color: '#7c3aed', name: 'Revenue' }
+              ]}
+              height={300}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

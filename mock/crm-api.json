@@ -1,0 +1,629 @@
+{
+  "name": "CRM API",
+  "uuid": "21373d9d-0a7c-47c7-8f30-b3a23c0daba8",
+  "port": 3005,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "d0e0677d-4164-4b8b-9ba3-8f86138d4dd2",
+      "method": "GET",
+      "endpoint": "/api/accounts",
+      "responses": [
+        {
+          "uuid": "5ce36855-9fb7-4337-be3d-33cdd01ee1fb",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"name\": \"Cyberdyne Systems\",\n    \"website\": \"www.cyberdyne.com\",\n    \"owner\": \"Alex Morgan\",\n    \"industry\": \"Technology\",\n    \"status\": \"active\",\n    \"revenue\": \"$1.2B\",\n    \"lastActivity\": \"2 days ago\"\n  },\n  {\n    \"id\": \"2\",\n    \"name\": \"Massive Dynamic\",\n    \"website\": \"www.massivedynamic.com\",\n    \"owner\": \"Alex Morgan\",\n    \"industry\": \"Technology\",\n    \"status\": \"churned\",\n    \"revenue\": \"$3.5B\",\n    \"lastActivity\": \"3 months ago\"\n  },\n  {\n    \"id\": \"3\",\n    \"name\": \"Umbrella Corporation\",\n    \"website\": \"www.umbrella.com\",\n    \"owner\": \"Alex Morgan\",\n    \"industry\": \"Healthcare\",\n    \"status\": \"prospect\",\n    \"revenue\": \"$900.0M\",\n    \"lastActivity\": \"5 days ago\"\n  },\n  {\n    \"id\": \"4\",\n    \"name\": \"Wayne Enterprises\",\n    \"website\": \"www.wayne.com\",\n    \"owner\": \"Alex Morgan\",\n    \"industry\": \"Technology\",\n    \"status\": \"active\",\n    \"revenue\": \"$5.0B\",\n    \"lastActivity\": \"1 week ago\"\n  }\n]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "b54196c5-3212-4255-80df-2f469ce9559b",
+      "method": "GET",
+      "endpoint": "/api/contacts",
+      "responses": [
+        {
+          "uuid": "d216c70c-58fc-4f84-b8c2-bbf2c25c17b7",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"name\": \"Alice Abernathy\",\n    \"title\": \"Head of Security\",\n    \"account\": \"Umbrella Corporation\",\n    \"role\": \"Influencer\",\n    \"email\": \"alice@umbrella.com\",\n    \"phone\": \"+1 (555) 666-6666\",\n    \"lastActivity\": \"5 days ago\",\n    \"avatarColor\": \"bg-primary/10 text-primary\"\n  },\n  {\n    \"id\": \"2\",\n    \"name\": \"Bruce Wayne\",\n    \"title\": \"CEO\",\n    \"account\": \"Wayne Enterprises\",\n    \"role\": \"Decision Maker\",\n    \"email\": \"bruce@wayne.com\",\n    \"phone\": \"+1 (555) 987-6543\",\n    \"lastActivity\": \"1 week ago\",\n    \"avatarColor\": \"bg-blue-100 text-blue-600\"\n  }\n]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "61e0b385-6e75-40e4-870c-784eab26e890",
+      "method": "GET",
+      "endpoint": "/api/opportunities",
+      "responses": [
+        {
+          "uuid": "809632c0-fa49-4d91-a541-35721b74b2f1",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"oppId\": \"OPP-001\",\n    \"name\": \"AI Defense System Upgrade\",\n    \"subTitle\": \"Sarah Connor (CTO)\",\n    \"account\": \"Cyberdyne Systems\",\n    \"amount\": \"$50,000\",\n    \"stage\": \"Prospecting\",\n    \"expectedClosure\": \"2026-04-15\",\n    \"lastContact\": \"2 days ago\",\n    \"createdOn\": \"2026-03-01\",\n    \"email\": \"sarah@cyberdyne.com\",\n    \"phone\": \"+1 (555) 123-4567\",\n    \"owner\": \"Alex Morgan\"\n  },\n  {\n    \"id\": \"2\",\n    \"oppId\": \"OPP-002\",\n    \"name\": \"Cloud Migration Project\",\n    \"subTitle\": \"John Smith (VP of Engineering)\",\n    \"account\": \"TechCorp\",\n    \"amount\": \"$75,000\",\n    \"stage\": \"Discovery Done\",\n    \"expectedClosure\": \"2026-05-10\",\n    \"lastContact\": \"1 day ago\",\n    \"createdOn\": \"2026-03-05\",\n    \"email\": \"john@techcorp.com\",\n    \"phone\": \"+1 (555) 333-4444\",\n    \"owner\": \"Alex Morgan\"\n  }\n]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "e41645f7-66dd-46c2-bdd1-e99fedba94a6",
+      "method": "GET",
+      "endpoint": "/api/tasks",
+      "responses": [
+        {
+          "uuid": "d6c9fdad-b86b-49b3-9d8a-a59c7b4a0057",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"subject\": \"Update CRM records\",\n    \"description\": \"Update phone numbers...\",\n    \"dueDate\": \"2023-11-01\",\n    \"priority\": \"Medium\",\n    \"status\": \"Completed\",\n    \"relatedTo\": \"Internal\",\n    \"relatedType\": \"Account\",\n    \"ownerName\": \"Jane Smith\"\n  },\n  {\n    \"id\": \"2\",\n    \"subject\": \"Follow up with Sarah\",\n    \"description\": \"Contract discussion...\",\n    \"dueDate\": \"2023-11-10\",\n    \"priority\": \"High\",\n    \"status\": \"To Do\",\n    \"relatedTo\": \"Sarah Connor\",\n    \"relatedType\": \"Contact\",\n    \"ownerName\": \"John Doe\"\n  }\n]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "ae54ed74-08ac-4b0d-a5a3-16757fd65146",
+      "method": "GET",
+      "endpoint": "/api/quotes",
+      "responses": [
+        {
+          "uuid": "420f3b94-b3d1-42fc-890f-89c2aea07fa1",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"number\": \"Q-2023-0045\",\n    \"version\": \"Version 1\",\n    \"customerName\": \"John Doe\",\n    \"customerCompany\": \"Acme Corp\",\n    \"date\": \"2023-10-25\",\n    \"validUntil\": \"2023-11-25\",\n    \"amount\": \"8,496\",\n    \"currency\": \"USD\",\n    \"status\": \"Sent\"\n  }\n]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4f5b1c11-39cb-41ea-8b53-59370c09d8a7",
+      "method": "GET",
+      "endpoint": "/api/employees",
+      "responses": [
+        {
+          "uuid": "d8728fb6-9964-450b-ba3d-44996d8aecb0",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"name\": \"Admin User\",\n    \"role\": \"System Administrator\",\n    \"department\": \"Operations\",\n    \"subDepartment\": \"Admin\",\n    \"email\": \"admin@example.com\",\n    \"phone\": \"+1 (555) 000-0001\",\n    \"location\": \"Building A, Floor 1\",\n    \"desk\": \"Desk: A-101\",\n    \"avatar\": \"https://api.dicebear.com/7.x/avataaars/svg?seed=Admin\"\n  }\n]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "7a5bcf43-733f-4fbe-a375-e2013fe8ab48",
+      "method": "GET",
+      "endpoint": "/api/dashboard/stats",
+      "responses": [
+        {
+          "uuid": "23e9c142-5e6a-45b7-834b-349750ea09b2",
+          "body": "{\"totalAccounts\":42,\"totalContacts\":156,\"totalOpportunities\":28,\"totalRevenue\":\"$2.5M\",\"pipelineValue\":\"$850,000\",\"closedWonThisMonth\":5,\"conversionRate\":0.23,\"accountsGrowth\":12.5,\"contactsGrowth\":8.3,\"opportunitiesGrowth\":-5.2}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "92f3d354-517e-4168-a187-3e0bf1d391f9",
+      "method": "GET",
+      "endpoint": "/api/pipeline/overview",
+      "responses": [
+        {
+          "uuid": "9b4283a2-9f0b-4c7d-9694-817c4d5839d5",
+          "body": "[{\"stage\":\"Prospecting\",\"count\":8,\"value\":120000},{\"stage\":\"Qualification\",\"count\":5,\"value\":85000},{\"stage\":\"Proposal\",\"count\":4,\"value\":200000},{\"stage\":\"Negotiation\",\"count\":3,\"value\":175000},{\"stage\":\"Closed Won\",\"count\":12,\"value\":450000},{\"stage\":\"Closed Lost\",\"count\":6,\"value\":95000}]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "3a8e56c6-3ab9-4660-ae6e-42d2380d96f9",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "responses": [
+        {
+          "uuid": "861cafae-7b11-4636-9269-b4202283bd9f",
+          "body": "{\"success\":true,\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBjcm0uY29tIiwibmFtZSI6IkFsZXggTW9yZ2FuIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzM0MDUxNjAwfQ.test-token\",\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Sales\"},\"message\":\"Login successful\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "abeb66c6-7e4e-44eb-b031-94a57931852b",
+          "body": "{\"success\":false,\"message\":\"Invalid email or password\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "36920133-7e54-49ce-95b8-965182c3ed8e",
+      "method": "GET",
+      "endpoint": "/api/auth/validate",
+      "responses": [
+        {
+          "uuid": "9a7fa9a5-627d-4a46-b9f3-1d2e9f619721",
+          "body": "{\"valid\":true,\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Sales\"}}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "85a5446e-f115-44a7-815b-6d9bd9d60d84",
+          "body": "{\"valid\":false,\"message\":\"Token expired or invalid\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "19fff8b4-e630-4534-a4e7-fe3dc9fcf397",
+      "method": "GET",
+      "endpoint": "/api/users",
+      "responses": [
+        {
+          "uuid": "d08c2b4f-7b1c-4c4d-ae97-595f59165530",
+          "body": "[{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Sales\",\"avatar\":null,\"status\":\"active\"},{\"id\":\"2\",\"email\":\"sales@crm.com\",\"name\":\"Sarah Jenkins\",\"role\":\"manager\",\"department\":\"Sales\",\"avatar\":null,\"status\":\"active\"},{\"id\":\"3\",\"email\":\"rep@crm.com\",\"name\":\"John Doe\",\"role\":\"sales_rep\",\"department\":\"Sales\",\"avatar\":null,\"status\":\"active\"}]",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "627c8cb0-c551-44b4-b0c2-c85f0a6a44f2",
+      "method": "POST",
+      "endpoint": "/api/auth/logout",
+      "responses": [
+        {
+          "uuid": "a95e10d6-6c4c-43ff-93d4-a4a5d795f1c0",
+          "body": "{\"success\":true,\"message\":\"Logged out successfully\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "bodyType": "INLINE",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "documentation": "",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "lastMigration": 33,
+  "endpointPrefix": "",
+  "latency": 0,
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "d0e0677d-4164-4b8b-9ba3-8f86138d4dd2"
+    },
+    {
+      "type": "route",
+      "uuid": "b54196c5-3212-4255-80df-2f469ce9559b"
+    },
+    {
+      "type": "route",
+      "uuid": "61e0b385-6e75-40e4-870c-784eab26e890"
+    },
+    {
+      "type": "route",
+      "uuid": "e41645f7-66dd-46c2-bdd1-e99fedba94a6"
+    },
+    {
+      "type": "route",
+      "uuid": "ae54ed74-08ac-4b0d-a5a3-16757fd65146"
+    },
+    {
+      "type": "route",
+      "uuid": "4f5b1c11-39cb-41ea-8b53-59370c09d8a7"
+    },
+    {
+      "type": "route",
+      "uuid": "7a5bcf43-733f-4fbe-a375-e2013fe8ab48"
+    },
+    {
+      "type": "route",
+      "uuid": "92f3d354-517e-4168-a187-3e0bf1d391f9"
+    },
+    {
+      "type": "route",
+      "uuid": "3a8e56c6-3ab9-4660-ae6e-42d2380d96f9"
+    },
+    {
+      "type": "route",
+      "uuid": "36920133-7e54-49ce-95b8-965182c3ed8e"
+    },
+    {
+      "type": "route",
+      "uuid": "19fff8b4-e630-4534-a4e7-fe3dc9fcf397"
+    },
+    {
+      "type": "route",
+      "uuid": "627c8cb0-c551-44b4-b0c2-c85f0a6a44f2"
+    }
+  ],
+  "folders": [],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "data": [],
+  "callbacks": []
+}

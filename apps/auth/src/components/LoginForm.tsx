@@ -1,49 +1,32 @@
 /**
  * LoginForm - Email/password authentication form
- * Contains email input, password input, remember me, and forgot password
- * Validates against hardcoded credentials for demo
+ * Uses API for authentication with role-based login
  */
 import React, { useState } from 'react';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-const VALID_EMAIL = 'hello@gmail.com';
-const VALID_PASSWORD = 'hello';
-
-
-// const VALID_EMAIL = 'SalesPerson0000@gmail.com';
-// const VALID_PASSWORD = 'VISHAL_ADMIN@0000';
+import { useAuth } from '../services/hooks/useAuth';
 
 export function LoginForm() {
   const navigate = useNavigate();
+  const { login, loading, error: authError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [localError, setLocalError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    setLocalError('');
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      // Store auth state
-      localStorage.setItem('crm_auth', JSON.stringify({
-        isAuthenticated: true,
-        email: email,
-        user: 'Admin User',
-        role: 'admin',
-        loginTime: new Date().toISOString()
-      }));
-      navigate('/dashboard');
-    } else {
-      setError('Invalid email or password. Contact admin for access.');
-      setIsLoading(false);
+    const result = await login({ email, password });
+    
+    if (!result.success) {
+      setLocalError(result.error || 'Login failed');
     }
   };
+
+  const displayError = localError || authError;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -71,65 +54,58 @@ export function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full pl-10 pr-10 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors text-foreground text-[15px] shadow-sm bg-background"
-            placeholder="••••••••"
+            placeholder="Enter your password"
             required
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
           >
             {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
           </button>
         </div>
       </div>
 
-      {error && (
-        <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-          <p className="text-sm text-destructive font-medium">{error}</p>
+      {displayError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-600 font-medium">{displayError}</p>
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center">
+      <div className="flex items-center justify-between mb-6">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
-            id="remember_me"
-            name="remember_me"
             type="checkbox"
-            className="h-4 w-4 text-primary focus:ring-primary border-border rounded cursor-pointer"
+            className="w-4 h-4 rounded border-border text-primary focus:ring-primary/20"
           />
-          <label htmlFor="remember_me" className="ml-2 block text-sm text-foreground cursor-pointer">
-            Remember me
-          </label>
-        </div>
-
-        <div className="text-sm">
-          <span className="font-medium text-muted-foreground">
-            Private access only
-          </span>
-        </div>
+          <span className="text-sm text-foreground/80 font-medium">Remember me</span>
+        </label>
+        <a href="#" className="text-sm text-primary font-medium hover:underline underline-offset-4">
+          Forgot password?
+        </a>
       </div>
 
       <button
         type="submit"
-        disabled={isLoading}
-        className="w-full bg-primary text-primary-foreground font-medium py-2.5 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mb-8 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2.5 px-4 rounded-md font-semibold text-[15px] hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
       >
-        {isLoading ? (
-          <span className="flex items-center gap-2">
-            <svg className="animate-spin h-4 w-4 text-primary-foreground" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Signing in...
-          </span>
+        {loading ? (
+          <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
         ) : (
           <>
-            Sign in
+            Sign In
             <ArrowRight className="w-[18px] h-[18px]" />
           </>
         )}
       </button>
+
+      <div className="mt-6 text-center">
+        <p className="text-sm text-muted-foreground">
+          Demo credentials: <span className="font-medium text-foreground">admin@crm.com</span> / <span className="font-medium text-foreground">crm123</span>
+        </p>
+      </div>
     </form>
   );
 }

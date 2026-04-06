@@ -25,14 +25,8 @@ import { ThemeProvider } from '@crm/ui';
  * Auth check helper
  */
 function checkAuth(): boolean {
-  const auth = localStorage.getItem('crm_auth');
-  if (!auth) return false;
-  try {
-    const data = JSON.parse(auth);
-    return data.isAuthenticated === true;
-  } catch {
-    return false;
-  }
+  const token = localStorage.getItem('crm_token');
+  return !!token;
 }
 
 /**
@@ -60,7 +54,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
  * Logout handler
  */
 function handleLogout() {
-  localStorage.removeItem('crm_auth');
+  localStorage.removeItem('crm_token');
+  localStorage.removeItem('crm_user');
   window.location.href = '/login';
 }
 

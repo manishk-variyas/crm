@@ -15,10 +15,12 @@ import {
   ChevronRight,
   Phone,
   Mail,
-  Target
+  Target,
+  RefreshCw
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, StatusBadge, getStatusVariant, PageActions, ExportOptionsModal } from '@crm/ui';
+import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, StatusBadge, getStatusVariant, PageActions, ExportOptionsModal, FormInput } from '@crm/ui';
 import { OpportunityModal, OpportunityQuickViewModal } from '../components/Opportunities/modals';
+import { useOpportunities } from '../services/hooks';
 
 interface Opportunity {
   id: string;
@@ -44,156 +46,7 @@ interface Opportunity {
   reverseAuction?: 'Yes' | 'No';
 }
 
-const OPPORTUNITIES: Opportunity[] = [
-  {
-    id: '1',
-    oppId: 'OPP-005',
-    name: 'Arc Reactor Supply Chain',
-    subTitle: 'Tony Stark (CEO)',
-    account: 'Stark Industries',
-    amount: '$500,000',
-    stage: 'Negotiation',
-    expectedClosure: 'Not set',
-    lastContact: 'Yesterday',
-    createdOn: '2026-03-15',
-    email: 'tony@stark.com',
-    phone: '+1 (555) 777-7777',
-    owner: 'Alex Morgan',
-    productInterest: 'Arc Reactor Tech',
-    description: 'Main supply chain for next-gen energy systems.',
-    industry: 'Technology',
-    emdAmount: '5,000',
-    source: 'Referral',
-    sourceName: 'Pepper Potts',
-    reverseAuction: 'No'
-  },
-  {
-    id: '2',
-    oppId: 'OPP-004',
-    name: 'Hoverboard Prototype Materials',
-    subTitle: 'Marty McFly (Product Manager)',
-    account: 'Hill Valley Inc.',
-    amount: '$30,000',
-    stage: 'Prospecting',
-    expectedClosure: 'Not set',
-    lastContact: '5 days ago',
-    createdOn: '2026-03-12',
-    email: 'marty@hillvalley.com',
-    phone: '+1 (555) 111-2222',
-    owner: 'Alex Morgan',
-    productInterest: 'Anti-gravity Composites',
-    description: 'Looking for specialized materials for prototype testing.',
-    industry: 'Manufacturing',
-    emdAmount: '1,000',
-    source: 'Website',
-    reverseAuction: 'No'
-  },
-  {
-    id: '3',
-    oppId: 'OPP-003',
-    name: 'Colony Terraforming Equipment',
-    subTitle: 'Ellen Ripley (Operations Director)',
-    account: 'Weyland-Yutani',
-    amount: '$120,000',
-    stage: 'Qualified',
-    expectedClosure: 'Not set',
-    lastContact: '3 days ago',
-    createdOn: '2026-03-10',
-    email: 'ripley@weyland.com',
-    phone: '+1 (555) 888-9999',
-    owner: 'Alex Morgan',
-    productInterest: 'Atmospheric Processors',
-    description: 'Heavy duty terraforming equipment for extraterrestrial colonies.',
-    industry: 'Manufacturing',
-    emdAmount: '10,000',
-    source: 'LinkedIn',
-    reverseAuction: 'No'
-  },
-  {
-    id: '4',
-    oppId: 'OPP-007',
-    name: 'Artifact Preservation Tech',
-    subTitle: 'Diana Prince (Curator)',
-    account: 'Louvre Museum',
-    amount: '$15,000',
-    stage: 'Discovery Done',
-    expectedClosure: 'Not set',
-    lastContact: '2 weeks ago',
-    createdOn: '2026-03-20',
-    email: 'diana@louvre.com',
-    phone: '+1 (555) 000-1111',
-    owner: 'Alex Morgan',
-    productInterest: 'Climate Control Systems',
-    description: 'High-precision climate and humidity control for museum storage.',
-    industry: 'Government/Non-Profit',
-    emdAmount: '500',
-    source: 'Trade Show',
-    reverseAuction: 'No'
-  },
-  {
-    id: '5',
-    oppId: 'OPP-001',
-    name: 'AI Defense System Upgrade',
-    subTitle: 'Sarah Connor (CTO)',
-    account: 'Cyberdyne Systems',
-    amount: '$50,000',
-    stage: 'Prospecting',
-    expectedClosure: '2026-04-15',
-    lastContact: '2 days ago',
-    createdOn: '2026-03-01',
-    email: 'sarah@cyberdyne.com',
-    phone: '+1 (555) 123-4567',
-    owner: 'Alex Morgan',
-    productInterest: 'Neural Processors',
-    description: 'Strategic upgrade for existing AI defense infrastructure.',
-    industry: 'Technology',
-    emdAmount: '2,500',
-    source: 'Cold Call',
-    reverseAuction: 'No'
-  },
-  {
-    id: '6',
-    oppId: 'OPP-006',
-    name: 'Security Systems Overhaul',
-    subTitle: 'Bruce Wayne (Chairman)',
-    account: 'Wayne Enterprises',
-    amount: '$250,000',
-    stage: 'Proposal Sent',
-    expectedClosure: 'Not set',
-    lastContact: '1 week ago',
-    createdOn: '2026-03-18',
-    email: 'bruce@wayne.com',
-    phone: '+1 (555) 987-6543',
-    owner: 'Alex Morgan',
-    productInterest: 'Biometric Security',
-    description: 'Complete overhaul of physical and digital security protocols at Wayne Tower.',
-    industry: 'Finance',
-    emdAmount: '15,000',
-    source: 'Referral',
-    reverseAuction: 'No'
-  },
-  {
-    id: '7',
-    oppId: 'OPP-002',
-    name: 'Cloud Migration Project',
-    subTitle: 'John Smith (VP of Engineering)',
-    account: 'TechCorp',
-    amount: '$75,000',
-    stage: 'Discovery Done',
-    expectedClosure: '2026-05-10',
-    lastContact: '1 day ago',
-    createdOn: '2026-03-05',
-    email: 'john@techcorp.com',
-    phone: '+1 (555) 333-4444',
-    owner: 'Alex Morgan',
-    productInterest: 'Multi-cloud Management',
-    description: 'Enterprise-wide migration of on-premise infrastructure to hybrid cloud.',
-    industry: 'Technology',
-    emdAmount: '3,000',
-    source: 'Website',
-    reverseAuction: 'No'
-  }
-];
+
 
 const sortOptions: SortOption[] = [
   { label: 'OPP ID', key: 'oppId' },
@@ -239,20 +92,22 @@ const filterConfigs: FilterConfig[] = [
     type: 'custom',
     render: (_, onChange, allFilters) => (
       <div className="flex items-center gap-2">
-        <input
+        <FormInput
           type="text"
           placeholder="Min"
           value={allFilters.amountMin || ''}
           onChange={(e) => onChange('amountMin', e.target.value)}
-          className="h-9 w-20 px-3 rounded-lg border border-border/60 bg-background text-sm font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          inputSize="sm"
+          className="w-20"
         />
         <span className="text-muted-foreground text-sm font-medium">–</span>
-        <input
+        <FormInput
           type="text"
           placeholder="Max"
           value={allFilters.amountMax || ''}
           onChange={(e) => onChange('amountMax', e.target.value)}
-          className="h-9 w-20 px-3 rounded-lg border border-border/60 bg-background text-sm font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          inputSize="sm"
+          className="w-20"
         />
       </div>
     )
@@ -263,18 +118,20 @@ const filterConfigs: FilterConfig[] = [
     type: 'custom',
     render: (_, onChange, allFilters) => (
       <div className="flex items-center gap-2">
-        <input
+        <FormInput
           type="date"
           value={allFilters.closeDateFrom || ''}
           onChange={(e) => onChange('closeDateFrom', e.target.value)}
-          className="h-9 px-3 rounded-lg border border-border/60 bg-background text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer"
+          inputSize="sm"
+          className="w-36 [&::-webkit-calendar-picker-indicator]:invert dark:[&::-webkit-calendar-picker-indicator]:invert"
         />
         <span className="text-muted-foreground text-sm font-medium">–</span>
-        <input
+        <FormInput
           type="date"
           value={allFilters.closeDateTo || ''}
           onChange={(e) => onChange('closeDateTo', e.target.value)}
-          className="h-9 px-3 rounded-lg border border-border/60 bg-background text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer"
+          inputSize="sm"
+          className="w-36 [&::-webkit-calendar-picker-indicator]:invert dark:[&::-webkit-calendar-picker-indicator]:invert"
         />
       </div>
     )
@@ -350,6 +207,7 @@ function ActionMenu({ opportunity, onEdit }: { opportunity: Opportunity, onEdit:
 }
 
 export function Opportunities() {
+  const { opportunities, loading, error, refetch } = useOpportunities();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>({ stage: 'all', account: 'all' });
@@ -359,6 +217,8 @@ export function Opportunities() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [alphabetLetter, setAlphabetLetter] = useState('');
+
+  const opportunitiesData = opportunities;
 
   const hasActiveFilters =
     (activeFilters.stage && activeFilters.stage !== 'all') ||
@@ -401,7 +261,7 @@ export function Opportunities() {
     }
   };
 
-  const filteredData = OPPORTUNITIES.filter((opp) => {
+  const filteredData = opportunitiesData.filter((opp) => {
     const matchesSearch =
       !searchTerm ||
       opp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -603,18 +463,30 @@ export function Opportunities() {
         title="Opportunities"
         subtitle="Track and manage your sales pipeline and ongoing deals."
         actions={
-          <PageActions
-            actions={[
-              {
-                label: 'Export',
-                onClick: () => setIsExportModalOpen(true),
-                icon: <Download className="w-4 h-4" />,
-                variant: 'outline',
-                disabled: selectedIds.length === 0
-              },
-              { label: 'Add Opportunity', onClick: () => setIsAddModalOpen(true), icon: <Plus className="w-4 h-4" />, variant: 'primary' }
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            {opportunities.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="h-9 px-3"
+              >
+                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              </Button>
+            )}
+            <PageActions
+              actions={[
+                {
+                  label: 'Export',
+                  onClick: () => setIsExportModalOpen(true),
+                  icon: <Download className="w-4 h-4" />,
+                  variant: 'outline',
+                  disabled: selectedIds.length === 0
+                },
+                { label: 'Add Opportunity', onClick: () => setIsAddModalOpen(true), icon: <Plus className="w-4 h-4" />, variant: 'primary' }
+              ]}
+            />
+          </div>
         }
       />
 
@@ -643,7 +515,7 @@ export function Opportunities() {
           resultsPerPage: 10,
           onPageChange: () => { }
         }}
-        emptyMessage="No opportunities match the current filters."
+        emptyMessage={loading ? "Loading opportunities..." : error ? `Error: ${error}` : "No opportunities match the current filters."}
       />
 
       {(editingOpp || isAddModalOpen) && (
