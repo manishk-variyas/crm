@@ -13,6 +13,7 @@ export interface HeaderProps {
   onMenuClick?: () => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
+  onSearchClick?: () => void;
   searchPlaceholder?: string;
   showSearch?: boolean;
   notificationCount?: number;
@@ -26,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   onMenuClick,
   searchQuery,
   onSearchChange,
+  onSearchClick,
   searchPlaceholder = "Search opportunities, deals, contacts...",
   showSearch = true,
   notificationCount = 0,
@@ -46,14 +48,18 @@ export const Header: React.FC<HeaderProps> = ({
         )}
         
         {showSearch && (
-          <div className="w-full max-w-md hidden sm:block">
+          <div className="w-full max-w-md hidden sm:block relative cursor-pointer group" onClick={onSearchClick}>
             <Input 
               icon={<Search />}
               value={searchQuery}
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder={searchPlaceholder}
-              className="h-10 text-sm bg-muted/20 border-border/40"
+              className="h-10 text-sm bg-muted/20 border-border/40 cursor-pointer"
+              readOnly
             />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:flex items-center gap-1 text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded border border-border/50">
+              <span className="text-[12px]">⌘</span><span>K</span>
+            </div>
           </div>
         )}
       </div>

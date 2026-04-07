@@ -4,6 +4,7 @@
  */
 import { PageHeader } from '../components/PageHeader';
 import { SalesTargets } from '../components/SalesTargets';
+import { StatsCards } from '../components/StatsCards';
 import { PerformanceChart } from '../components/PerformanceChart';
 import { PipelineChart } from '../components/PipelineChart';
 import { RecentActivity } from '../components/RecentActivity';
@@ -14,6 +15,7 @@ export function Dashboard() {
     <div className="w-full max-w-[1400px] mx-auto">
       <PageHeader />
       <SalesTargets />
+      <StatsCards />
       
       <div className="grid grid-cols-1 xl:grid-cols-7 gap-6 mb-6">
         <div className="xl:col-span-4">

@@ -10,6 +10,8 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './App': './src/App.tsx',
+        './Search': './src/services/api/search.ts',
+        './ApiClient': './src/services/api/client.ts',
       },
       shared: {
       react: { singleton: true, requiredVersion: '^18.0.0' },

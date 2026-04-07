@@ -15,6 +15,9 @@ import { CreateQuote } from './pages/CreateQuote';
 import { SalesPipeline } from './pages/SalesPipeline';
 import { Tasks } from './pages/Tasks';
 import { Reports } from './pages/Reports';
+import { SalesTargetsPage } from './pages/SalesTargetsPage';
+import { Automation } from './pages/Automation';
+import { SystemSettings } from './pages/SystemSettings';
 
 function App() {
   return (
@@ -26,11 +29,14 @@ function App() {
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/directory" element={<Employees />} />
       <Route path="/pipeline" element={<SalesPipeline />} />
+      <Route path="/sales-targets" element={<SalesTargetsPage />} />
       <Route path="/quotes" element={<Quotes />} />
       <Route path="/quotes/create" element={<CreateQuote />} />
       <Route path="/tasks" element={<Tasks />} />
       <Route path="/reports" element={<Reports />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/automation" element={<Automation />} />
+      <Route path="/system-settings" element={<SystemSettings />} />
     </Routes>
   );
 }

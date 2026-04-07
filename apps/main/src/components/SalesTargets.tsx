@@ -11,9 +11,41 @@ export function SalesTargets() {
   const { stats, loading } = useDashboard();
 
   const targets = stats ? [
-    { label: 'Weekly Target', date: 'Ends in 3 days', achieved: '$8,000', target: '$12,500', percent: 64, color: 'bg-primary/80', remaining: '$4,500 remaining' },
-    { label: 'Monthly Target', date: 'March 2026', achieved: stats.totalRevenue, target: '$50,000', percent: Math.round(parseFloat(stats.totalRevenue.replace(/[^0-9.]/g, '')) / 50000 * 100), color: 'bg-primary', remaining: '$18,000 remaining' },
-    { label: 'Quarterly Target', date: 'Q1 2026', achieved: stats.pipelineValue, target: '$150,000', percent: Math.round(parseFloat(stats.pipelineValue.replace(/[^0-9.]/g, '')) / 150000 * 100), color: 'bg-primary/60', remaining: '$30,000 remaining' },
+    { 
+      label: 'Weekly Target', 
+      date: 'Ends in 3 days', 
+      achieved: '$8,000', 
+      target: '$12,500', 
+      percent: 64, 
+      color: 'bg-primary/80', 
+      remaining: '$4,500 remaining' 
+    },
+    { 
+      label: 'Monthly Target', 
+      date: 'March 2026', 
+      achieved: stats.totalRevenue, 
+      target: '$50,000', 
+      percent: Math.round(parseFloat(stats.totalRevenue.replace(/[^0-9.]/g, '')) / 50000 * 100), 
+      color: 'bg-primary', 
+      get remaining() {
+        const ach = parseFloat(this.achieved.replace(/[^0-9.]/g, ''));
+        const tar = parseFloat(this.target.replace(/[^0-9.]/g, ''));
+        return ach >= tar ? 'Target Surpassed!' : `$${(tar - ach).toLocaleString()} remaining`;
+      }
+    },
+    { 
+      label: 'Quarterly Target', 
+      date: 'Q1 2026', 
+      achieved: stats.pipelineValue, 
+      target: '$150,000', 
+      percent: Math.round(parseFloat(stats.pipelineValue.replace(/[^0-9.]/g, '')) / 150000 * 100), 
+      color: 'bg-primary/60', 
+      get remaining() {
+        const ach = parseFloat(this.achieved.replace(/[^0-9.]/g, ''));
+        const tar = parseFloat(this.target.replace(/[^0-9.]/g, ''));
+        return ach >= tar ? 'Target Surpassed!' : `$${(tar - ach).toLocaleString()} remaining`;
+      }
+    },
   ] : [
     { label: 'Weekly Target', date: 'Ends in 3 days', achieved: '$8,000', target: '$12,500', percent: 64, color: 'bg-primary/80', remaining: '$4,500 remaining' },
     { label: 'Monthly Target', date: 'March 2026', achieved: '$32,000', target: '$50,000', percent: 64, color: 'bg-primary', remaining: '$18,000 remaining' },
@@ -58,8 +90,11 @@ export function SalesTargets() {
                   <span className="font-semibold text-foreground/70">{t.percent}%</span>
                   <span>{t.remaining}</span>
                 </div>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div className={`${t.color} h-2 rounded-full`} style={{ width: `${t.percent}%` }}></div>
+                <div className="w-full bg-muted rounded-full h-2 overflow-hidden shadow-inner">
+                  <div 
+                    className={`${t.color} h-2 rounded-full transition-all duration-500 ease-out`} 
+                    style={{ width: `${Math.min(t.percent, 100)}%` }}
+                  ></div>
                 </div>
               </div>
             ))}

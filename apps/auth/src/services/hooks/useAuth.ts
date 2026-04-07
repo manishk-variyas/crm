@@ -5,6 +5,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as apiLogin, logout as apiLogout, validateToken, setAuthData, getStoredUser, getStoredToken, clearAuthData, LoginRequest, User } from '../api/auth';
+import { useStore, RootStore } from '@crm/store';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -20,13 +21,29 @@ export interface AuthState {
  */
 export function useAuth() {
   const navigate = useNavigate();
+  const { setAuth, clearAuth, globalUser, globalIsAuthenticated } = useStore((state: RootStore) => ({
+    setAuth: state.setAuth,
+    clearAuth: state.clearAuth,
+    globalUser: state.user,
+    globalIsAuthenticated: state.isAuthenticated,
+  }));
+
   const [authState, setAuthState] = useState<AuthState>({
-    isAuthenticated: false,
-    user: null,
+    isAuthenticated: globalIsAuthenticated,
+    user: globalUser as User | null,
     token: null,
     loading: true,
     error: null,
   });
+
+  // Sync with global store
+  useEffect(() => {
+    setAuthState(prev => ({
+      ...prev,
+      isAuthenticated: globalIsAuthenticated,
+      user: globalUser as User | null,
+    }));
+  }, [globalIsAuthenticated, globalUser]);
 
   // Check auth on mount
   useEffect(() => {
@@ -79,6 +96,7 @@ export function useAuth() {
       
       if (response.success && response.token && response.user) {
         setAuthData(response.token, response.user);
+        setAuth(response.user as any, response.token);
         setAuthState({
           isAuthenticated: true,
           user: response.user,
@@ -109,6 +127,7 @@ export function useAuth() {
         };
         const fallbackToken = 'fallback-token';
         setAuthData(fallbackToken, fallbackUser);
+        setAuth(fallbackUser as any, fallbackToken);
         setAuthState({
           isAuthenticated: true,
           user: fallbackUser,
@@ -127,7 +146,7 @@ export function useAuth() {
       }));
       return { success: false, error: 'Login failed' };
     }
-  }, [navigate]);
+  }, [navigate, setAuth]);
 
   /**
    * Logout and clear auth
@@ -140,6 +159,7 @@ export function useAuth() {
     }
     
     clearAuthData();
+    clearAuth();
     
     setAuthState({
       isAuthenticated: false,
@@ -150,7 +170,7 @@ export function useAuth() {
     });
     
     navigate('/login');
-  }, [navigate]);
+  }, [navigate, clearAuth]);
 
   /**
    * Check if user has specific role

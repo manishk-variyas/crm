@@ -3,10 +3,11 @@
  * Wraps page content with consistent navigation and layout structure
  * Handles responsive sidebar behavior and mobile overlay
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Sidebar, Header, SidebarMenuItem } from '@crm/ui';
+import { Sidebar, Header, SidebarMenuItem, SearchModal } from '@crm/ui';
 import { useStore, RootStore } from '@crm/store';
+import { globalSearch } from '../services/searchService';
 import {
   Building2,
   CheckSquare,
@@ -18,46 +19,76 @@ import {
   BarChart3,
   Contact,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Target,
+  Zap,
+  Shield
 } from 'lucide-react';
 
 export function Layout({ children, onLogout }: { children: React.ReactNode; onLogout?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   const { 
     sidebarOpen, 
     setSidebarOpen, 
-    toggleSidebar 
+    toggleSidebar,
+    user: storeUser
   } = useStore((state: RootStore) => ({
     sidebarOpen: state.sidebarOpen,
     setSidebarOpen: state.setSidebarOpen,
     toggleSidebar: state.toggleSidebar,
+    user: state.user,
   }));
+
+  const user = storeUser || {
+    name: "Guest User",
+    role: "Visitor",
+    avatarUrl: "https://api.dicebear.com/7.x/notionists/svg?seed=Guest"
+  };
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const menuItems: SidebarMenuItem[] = [
+  const menuItems: (SidebarMenuItem & { requiredRoles?: string[] })[] = [
     { label: 'Dashboard', icon: LayoutDashboard, value: '/dashboard', href: '/dashboard' },
     { label: 'Opportunities', icon: Users, value: '/opportunities', href: '/opportunities' },
     { label: 'Accounts', icon: Building2, value: '/accounts', href: '/accounts' },
     { label: 'Customer Contacts', icon: Contact, value: '/contacts', href: '/contacts' },
-    { label: 'Employee Directory', icon: Users, value: '/directory', href: '/directory' },
+    { label: 'Employee Directory', icon: Users, value: '/directory', href: '/directory', requiredRoles: ['Admin', 'Manager'] },
     { label: 'Sales Pipeline', icon: BarChart3, value: '/pipeline', href: '/pipeline' },
+    { label: 'Sales Targets', icon: Target, value: '/sales-targets', href: '/sales-targets', requiredRoles: ['Admin', 'Manager'] },
     { label: 'Quotes', icon: FileText, value: '/quotes', href: '/quotes' },
     { label: 'Tasks', icon: CheckSquare, value: '/tasks', href: '/tasks' },
     { label: 'Reports', icon: LineChart, value: '/reports', href: '/reports' },
     { label: 'Settings', icon: Settings, value: '/settings', href: '/settings' },
+    { label: 'Automation', icon: Zap, value: '/automation', href: '/automation', requiredRoles: ['Admin'] },
+    { label: 'System Settings', icon: Shield, value: '/system-settings', href: '/system-settings', requiredRoles: ['Admin'] },
   ];
+
+  const filteredMenuItems = menuItems.filter(item => 
+    !item.requiredRoles || item.requiredRoles.includes(user.role)
+  );
 
   const activeItem = menuItems.find(item => location.pathname.startsWith(item.value!))?.value || '/dashboard';
 
-  const user = {
-    name: "Alex Morgan",
-    role: "Rep",
-    avatarUrl: "https://api.dicebear.com/7.x/notionists/svg?seed=Alex&backgroundColor=b6e3f4"
-  };
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleSearchNavigate = useCallback((url: string) => {
+    navigate(url);
+    setIsSearchOpen(false);
+  }, [navigate]);
+
 
   return (
     <div className="flex h-screen w-full bg-background overflow-hidden text-foreground font-sans relative">
@@ -76,7 +107,7 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
         <Sidebar
           companyInitials="E"
           companyName="Enterprise CRM"
-          menuItems={menuItems}
+          menuItems={filteredMenuItems}
           activeItem={activeItem}
           isCollapsed={!sidebarOpen}
           user={user}
@@ -93,6 +124,7 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
         <Header
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          onSearchClick={() => setIsSearchOpen(true)}
           notificationCount={1}
           onMenuClick={() => setIsMobileOpen(true)}
           rightElement={
@@ -110,6 +142,13 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
           {children}
         </main>
       </div>
+
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onNavigate={handleSearchNavigate}
+        searchFn={globalSearch}
+      />
     </div>
   );
 }

@@ -6,7 +6,7 @@
   "routes": [
     {
       "uuid": "d0e0677d-4164-4b8b-9ba3-8f86138d4dd2",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/accounts",
       "responses": [
         {
@@ -46,7 +46,7 @@
     },
     {
       "uuid": "b54196c5-3212-4255-80df-2f469ce9559b",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/contacts",
       "responses": [
         {
@@ -86,7 +86,7 @@
     },
     {
       "uuid": "61e0b385-6e75-40e4-870c-784eab26e890",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/opportunities",
       "responses": [
         {
@@ -126,7 +126,7 @@
     },
     {
       "uuid": "e41645f7-66dd-46c2-bdd1-e99fedba94a6",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/tasks",
       "responses": [
         {
@@ -166,7 +166,7 @@
     },
     {
       "uuid": "ae54ed74-08ac-4b0d-a5a3-16757fd65146",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/quotes",
       "responses": [
         {
@@ -206,7 +206,7 @@
     },
     {
       "uuid": "4f5b1c11-39cb-41ea-8b53-59370c09d8a7",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/employees",
       "responses": [
         {
@@ -246,12 +246,12 @@
     },
     {
       "uuid": "7a5bcf43-733f-4fbe-a375-e2013fe8ab48",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/dashboard/stats",
       "responses": [
         {
           "uuid": "23e9c142-5e6a-45b7-834b-349750ea09b2",
-          "body": "{\"totalAccounts\":42,\"totalContacts\":156,\"totalOpportunities\":28,\"totalRevenue\":\"$2.5M\",\"pipelineValue\":\"$850,000\",\"closedWonThisMonth\":5,\"conversionRate\":0.23,\"accountsGrowth\":12.5,\"contactsGrowth\":8.3,\"opportunitiesGrowth\":-5.2}",
+          "body": "{\"totalRevenue\":\"$124,500\",\"revenueGrowth\":12.5,\"activeDeals\":45,\"dealsGrowth\":4.2,\"winRate\":64,\"winRateGrowth\":-2.1,\"newOpportunities\":218,\"opportunitiesGrowth\":8.4,\"totalAccounts\":42,\"totalContacts\":156,\"pipelineValue\":\"$850,000\",\"closedWonThisMonth\":5,\"accountsGrowth\":12.5,\"contactsGrowth\":8.3}",
           "headers": [
             {
               "key": "Content-Type",
@@ -286,7 +286,7 @@
     },
     {
       "uuid": "92f3d354-517e-4168-a187-3e0bf1d391f9",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/pipeline/overview",
       "responses": [
         {
@@ -326,7 +326,7 @@
     },
     {
       "uuid": "3a8e56c6-3ab9-4660-ae6e-42d2380d96f9",
-      "method": "POST",
+      "method": "get",
       "endpoint": "/api/auth/login",
       "responses": [
         {
@@ -394,7 +394,7 @@
     },
     {
       "uuid": "36920133-7e54-49ce-95b8-965182c3ed8e",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/auth/validate",
       "responses": [
         {
@@ -462,7 +462,7 @@
     },
     {
       "uuid": "19fff8b4-e630-4534-a4e7-fe3dc9fcf397",
-      "method": "GET",
+      "method": "get",
       "endpoint": "/api/users",
       "responses": [
         {
@@ -502,7 +502,7 @@
     },
     {
       "uuid": "627c8cb0-c551-44b4-b0c2-c85f0a6a44f2",
-      "method": "POST",
+      "method": "get",
       "endpoint": "/api/auth/logout",
       "responses": [
         {

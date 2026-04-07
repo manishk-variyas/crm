@@ -20,31 +20,31 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Layout } from './components/Layout';
 import { PageLoader } from './components/PageLoader';
 import { ThemeProvider } from '@crm/ui';
-
-/**
- * Auth check helper
- */
-function checkAuth(): boolean {
-  const token = localStorage.getItem('crm_token');
-  return !!token;
-}
+import { useStore, RootStore } from '@crm/store';
 
 /**
  * ProtectedRoute - Redirects to login if not authenticated
+ * Optional role-based access control
  */
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    setIsAuthenticated(checkAuth());
-  }, []);
-
-  if (isAuthenticated === null) {
-    return <PageLoader />;
-  }
+function ProtectedRoute({ 
+  children, 
+  allowedRoles 
+}: { 
+  children: React.ReactNode; 
+  allowedRoles?: ('Admin' | 'Manager' | 'Executive' | 'Sales Rep')[] 
+}) {
+  const { isAuthenticated, user, loading } = useStore((state: RootStore) => ({
+    isAuthenticated: state.isAuthenticated,
+    user: state.user,
+    loading: false, // Zustand persist might need a moment but we'll assume it's synchronous for now
+  }));
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
@@ -53,10 +53,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 /**
  * Logout handler
  */
-function handleLogout() {
-  localStorage.removeItem('crm_token');
-  localStorage.removeItem('crm_user');
-  window.location.href = '/login';
+function useLogout() {
+  const clearAuth = useStore((state: RootStore) => state.clearAuth);
+  return () => {
+    localStorage.removeItem('crm_token');
+    localStorage.removeItem('crm_user');
+    clearAuth();
+    window.location.href = '/login';
+  };
 }
 
 /**
@@ -74,6 +78,28 @@ const Auth = React.lazy(() => import('auth/App'));
 const queryClient = new QueryClient();
 
 export default function App() {
+  const { isAuthenticated, setAuth } = useStore((state: RootStore) => ({
+    isAuthenticated: state.isAuthenticated,
+    setAuth: state.setAuth,
+  }));
+  const handleLogout = useLogout();
+
+  // Sync with token if store is fresh but data exists in localStorage
+  useEffect(() => {
+    if (!isAuthenticated) {
+      const token = localStorage.getItem('crm_token');
+      const userStr = localStorage.getItem('crm_user');
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          setAuth(user, token);
+        } catch (e) {
+          console.error('Failed to restore auth', e);
+        }
+      }
+    }
+  }, [isAuthenticated, setAuth]);
+
   return (
     <ThemeProvider>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -83,7 +109,7 @@ export default function App() {
             <Route
               path="/login"
               element={
-                checkAuth() ? <Navigate to="/dashboard" replace /> : (
+                isAuthenticated ? <Navigate to="/dashboard" replace /> : (
                   <React.Suspense fallback={<PageLoader />}>
                     <Auth />
                   </React.Suspense>

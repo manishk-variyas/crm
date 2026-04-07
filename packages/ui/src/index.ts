@@ -53,3 +53,5 @@ export { ReportStatsCard } from './components/charts/report-stats-card';
 export * from './components/modal';
 export { ExportOptionsModal } from './components/export-modal';
 export type { ExportOptionsModalProps } from './components/export-modal';
+export { SearchModal } from './components/search-modal';
+export type { SearchResult, SearchResults } from './components/search-modal';

@@ -5,16 +5,20 @@
 import { apiGet, API_ENDPOINTS } from './client';
 
 export interface DashboardStats {
+  totalRevenue: string;
+  revenueGrowth: number;
+  activeDeals: number;
+  dealsGrowth: number;
+  winRate: number;
+  winRateGrowth: number;
+  newOpportunities: number;
+  opportunitiesGrowth: number;
   totalAccounts: number;
   totalContacts: number;
-  totalOpportunities: number;
-  totalRevenue: string;
   pipelineValue: string;
   closedWonThisMonth: number;
-  conversionRate: number;
   accountsGrowth: number;
   contactsGrowth: number;
-  opportunitiesGrowth: number;
 }
 
 export interface PipelineStage {
