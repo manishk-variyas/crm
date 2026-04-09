@@ -27,6 +27,12 @@ export default defineConfig({
     port: 3002,
     strictPort: false,
     cors: true,
+    proxy: {
+      '^/api/.*': {
+        target: 'http://127.0.0.1:3005',
+        changeOrigin: true,
+      }
+    }
   },
   build: {
     target: 'esnext',
@@ -34,8 +40,15 @@ export default defineConfig({
     cssCodeSplit: false,
   },
   preview: {
+    "host":"0.0.0.0",
     port: 3002,
     strictPort: false,
     cors: true,
+    proxy: {
+      '^/api/.*': {
+        target: 'http://127.0.0.1:3005',
+        changeOrigin: true,
+      }
+    }
   },
 });

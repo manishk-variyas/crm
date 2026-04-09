@@ -100,12 +100,6 @@ export function LoginForm() {
           </>
         )}
       </button>
-
-      <div className="mt-6 text-center">
-        <p className="text-sm text-muted-foreground">
-          Demo credentials: <span className="font-medium text-foreground">admin@crm.com</span> / <span className="font-medium text-foreground">crm123</span>
-        </p>
-      </div>
     </form>
   );
 }

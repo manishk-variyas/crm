@@ -56,15 +56,15 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
     { label: 'Opportunities', icon: Users, value: '/opportunities', href: '/opportunities' },
     { label: 'Accounts', icon: Building2, value: '/accounts', href: '/accounts' },
     { label: 'Customer Contacts', icon: Contact, value: '/contacts', href: '/contacts' },
-    { label: 'Employee Directory', icon: Users, value: '/directory', href: '/directory', requiredRoles: ['Admin', 'Manager'] },
+    { label: 'Employee Directory', icon: Users, value: '/directory', href: '/directory', requiredRoles: ['admin', 'manager'] },
     { label: 'Sales Pipeline', icon: BarChart3, value: '/pipeline', href: '/pipeline' },
-    { label: 'Sales Targets', icon: Target, value: '/sales-targets', href: '/sales-targets', requiredRoles: ['Admin', 'Manager'] },
+    { label: 'Sales Targets', icon: Target, value: '/sales-targets', href: '/sales-targets', requiredRoles: ['admin', 'manager', 'executive'] },
     { label: 'Quotes', icon: FileText, value: '/quotes', href: '/quotes' },
     { label: 'Tasks', icon: CheckSquare, value: '/tasks', href: '/tasks' },
-    { label: 'Reports', icon: LineChart, value: '/reports', href: '/reports' },
+    { label: 'Reports', icon: LineChart, value: '/reports', href: '/reports', requiredRoles: ['admin', 'manager', 'executive'] },
     { label: 'Settings', icon: Settings, value: '/settings', href: '/settings' },
-    { label: 'Automation', icon: Zap, value: '/automation', href: '/automation', requiredRoles: ['Admin'] },
-    { label: 'System Settings', icon: Shield, value: '/system-settings', href: '/system-settings', requiredRoles: ['Admin'] },
+    { label: 'Automation', icon: Zap, value: '/automation', href: '/automation', requiredRoles: ['admin'] },
+    { label: 'System Settings', icon: Shield, value: '/system-settings', href: '/system-settings', requiredRoles: ['admin'] },
   ];
 
   const filteredMenuItems = menuItems.filter(item => 

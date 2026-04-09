@@ -326,12 +326,12 @@
     },
     {
       "uuid": "3a8e56c6-3ab9-4660-ae6e-42d2380d96f9",
-      "method": "get",
+      "method": "post",
       "endpoint": "/api/auth/login",
       "responses": [
         {
-          "uuid": "861cafae-7b11-4636-9269-b4202283bd9f",
-          "body": "{\"success\":true,\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBjcm0uY29tIiwibmFtZSI6IkFsZXggTW9yZ2FuIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzM0MDUxNjAwfQ.test-token\",\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Sales\"},\"message\":\"Login successful\"}",
+          "uuid": "d400c207-1a55-4cc6-a452-cd58e6314399",
+          "body": "{\"success\":true,\"token\":\"admin-token\",\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Management\"},\"message\":\"Login successful\"}",
           "headers": [
             {
               "key": "Content-Type",
@@ -342,24 +342,32 @@
               "value": "*"
             }
           ],
-          "bodyType": "INLINE",
-          "latency": 0,
           "statusCode": 200,
-          "label": "",
+          "label": "Admin Role",
+          "rules": [
+            {
+              "target": "body",
+              "value": "admin@crm.com",
+              "operator": "regex",
+              "modifier": "",
+              "invert": false
+            }
+          ],
+          "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
           "filePath": "",
           "databucketID": "",
           "sendFileAsBody": false,
-          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false,
           "crudKey": "id",
           "callbacks": []
         },
         {
-          "uuid": "abeb66c6-7e4e-44eb-b031-94a57931852b",
-          "body": "{\"success\":false,\"message\":\"Invalid email or password\"}",
+          "uuid": "f051dd29-c62f-4137-a3a1-4091c25a3aa4",
+          "body": "{\"success\":true,\"token\":\"manager-token\",\"user\":{\"id\":\"2\",\"email\":\"manager@crm.com\",\"name\":\"Sarah Jenkins\",\"role\":\"manager\",\"department\":\"Sales\"},\"message\":\"Login successful\"}",
           "headers": [
             {
               "key": "Content-Type",
@@ -370,18 +378,126 @@
               "value": "*"
             }
           ],
-          "bodyType": "INLINE",
-          "latency": 0,
           "statusCode": 200,
-          "label": "",
+          "label": "Manager Role",
+          "rules": [
+            {
+              "target": "body",
+              "value": "manager@crm.com",
+              "operator": "regex",
+              "modifier": "",
+              "invert": false
+            }
+          ],
+          "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
           "filePath": "",
           "databucketID": "",
           "sendFileAsBody": false,
-          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "85192184-273c-45d2-82e1-147735765845",
+          "body": "{\"success\":true,\"token\":\"rep-token\",\"user\":{\"id\":\"3\",\"email\":\"rep@crm.com\",\"name\":\"John Doe\",\"role\":\"sales_rep\",\"department\":\"Sales\"},\"message\":\"Login successful\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "statusCode": 200,
+          "label": "Sales Rep Role",
+          "rules": [
+            {
+              "target": "body",
+              "value": "rep@crm.com",
+              "operator": "regex",
+              "modifier": "",
+              "invert": false
+            }
+          ],
           "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "615d1344-99ca-4167-9327-95b0bfcada83",
+          "body": "{\"success\":true,\"token\":\"exec-token\",\"user\":{\"id\":\"4\",\"email\":\"exec@crm.com\",\"name\":\"Marcus Vane\",\"role\":\"executive\",\"department\":\"Executive\"},\"message\":\"Login successful\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "statusCode": 200,
+          "label": "Executive Role",
+          "rules": [
+            {
+              "target": "body",
+              "value": "exec@crm.com",
+              "operator": "regex",
+              "modifier": "",
+              "invert": false
+            }
+          ],
+          "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "f7ba5ed4-1498-47f5-b80f-4c852058ddf7",
+          "body": "{\"success\":false,\"message\":\"Account not found in mock rules. Use admin@crm.com, manager@crm.com, rep@crm.com, or exec@crm.com\"}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "statusCode": 401,
+          "label": "Invalid Credentials",
+          "rules": [],
+          "default": true,
+          "latency": 0,
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
           "crudKey": "id",
           "callbacks": []
         }
@@ -398,8 +514,8 @@
       "endpoint": "/api/auth/validate",
       "responses": [
         {
-          "uuid": "9a7fa9a5-627d-4a46-b9f3-1d2e9f619721",
-          "body": "{\"valid\":true,\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Sales\"}}",
+          "uuid": "cd0d520d-a3ae-46e2-afa1-f686939e3a57",
+          "body": "{\"valid\":true,\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Management\"}}",
           "headers": [
             {
               "key": "Content-Type",
@@ -410,24 +526,32 @@
               "value": "*"
             }
           ],
-          "bodyType": "INLINE",
-          "latency": 0,
           "statusCode": 200,
-          "label": "",
+          "label": "Admin Token",
+          "rules": [
+            {
+              "target": "header",
+              "value": "Bearer admin-token",
+              "operator": "equals",
+              "modifier": "",
+              "invert": false
+            }
+          ],
+          "default": true,
+          "latency": 0,
+          "bodyType": "INLINE",
           "filePath": "",
           "databucketID": "",
           "sendFileAsBody": false,
-          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false,
           "crudKey": "id",
           "callbacks": []
         },
         {
-          "uuid": "85a5446e-f115-44a7-815b-6d9bd9d60d84",
-          "body": "{\"valid\":false,\"message\":\"Token expired or invalid\"}",
+          "uuid": "6119adc5-4c89-484f-88b5-681715ef5d7f",
+          "body": "{\"valid\":true,\"user\":{\"id\":\"2\",\"email\":\"manager@crm.com\",\"name\":\"Sarah Jenkins\",\"role\":\"manager\",\"department\":\"Sales\"}}",
           "headers": [
             {
               "key": "Content-Type",
@@ -438,18 +562,98 @@
               "value": "*"
             }
           ],
-          "bodyType": "INLINE",
-          "latency": 0,
           "statusCode": 200,
-          "label": "",
+          "label": "Manager Token",
+          "rules": [
+            {
+              "target": "header",
+              "value": "Bearer manager-token",
+              "operator": "equals",
+              "modifier": "",
+              "invert": false
+            }
+          ],
+          "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
           "filePath": "",
           "databucketID": "",
           "sendFileAsBody": false,
-          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "977ebb28-c792-4e16-884b-c949447ce7e8",
+          "body": "{\"valid\":true,\"user\":{\"id\":\"3\",\"email\":\"rep@crm.com\",\"name\":\"John Doe\",\"role\":\"sales_rep\",\"department\":\"Sales\"}}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "statusCode": 200,
+          "label": "Rep Token",
+          "rules": [
+            {
+              "target": "header",
+              "value": "Bearer rep-token",
+              "operator": "equals",
+              "modifier": "",
+              "invert": false
+            }
+          ],
           "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "e225dd3a-85f9-4b4a-bf3e-3e3679ee2e7b",
+          "body": "{\"valid\":true,\"user\":{\"id\":\"4\",\"email\":\"exec@crm.com\",\"name\":\"Marcus Vane\",\"role\":\"executive\",\"department\":\"Executive\"}}",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "statusCode": 200,
+          "label": "Exec Token",
+          "rules": [
+            {
+              "target": "header",
+              "value": "Bearer exec-token",
+              "operator": "equals",
+              "modifier": "",
+              "invert": false
+            }
+          ],
+          "default": false,
+          "latency": 0,
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
           "crudKey": "id",
           "callbacks": []
         }

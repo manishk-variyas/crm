@@ -3,7 +3,15 @@
  * Centralized API settings - easy to switch between mock and real API
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005';
+const getBaseUrl = () => {
+  // Use relative paths in the browser to rely on Vite's proxy/internal routing.
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+  return 'http://localhost:3005';
+};
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || getBaseUrl();
 
 export const API_CONFIG = {
   baseUrl: API_BASE_URL,

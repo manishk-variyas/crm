@@ -4,7 +4,15 @@
  */
 import { SearchResults } from '@crm/ui';
 
-const API_BASE = 'http://localhost:3005';
+const getBaseUrl = () => {
+  // Use relative paths in the browser to rely on Vite's proxy/internal routing.
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+  return 'http://localhost:3005';
+};
+
+const API_BASE = getBaseUrl();
 
 // Simple in-memory cache for search results
 const searchCache = new Map<string, { data: SearchResults; timestamp: number }>();

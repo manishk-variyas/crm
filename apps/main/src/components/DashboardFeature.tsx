@@ -8,7 +8,7 @@ export function DashboardFeature() {
       await new Promise(r => setTimeout(r, 1000));
       return { status: 'Live', lastUpdate: new Date().toLocaleTimeString() };
     }
-  });
+  }); 
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
@@ -20,7 +20,7 @@ export function DashboardFeature() {
       ) : (
         <p className="text-xs text-emerald-500 font-medium flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          Remote state: {data?.status} — {data?.lastUpdate}
+          Remote state: {data?.status} — {data?.lastUpdate} 
         </p>
       )}
     </div>
