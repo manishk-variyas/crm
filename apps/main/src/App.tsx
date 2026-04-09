@@ -18,6 +18,8 @@ import { Reports } from './pages/Reports';
 import { SalesTargetsPage } from './pages/SalesTargetsPage';
 import { Automation } from './pages/Automation';
 import { SystemSettings } from './pages/SystemSettings';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { NotFound } from './components/NotFound';
 
 function App() {
   return (
@@ -27,16 +29,52 @@ function App() {
       <Route path="/opportunities" element={<Opportunities />} />
       <Route path="/accounts" element={<Accounts />} />
       <Route path="/contacts" element={<Contacts />} />
-      <Route path="/directory" element={<Employees />} />
+      <Route 
+        path="/directory" 
+        element={
+          <ProtectedRoute requiredRoles={['admin', 'manager']}>
+            <Employees />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="/pipeline" element={<SalesPipeline />} />
-      <Route path="/sales-targets" element={<SalesTargetsPage />} />
+      <Route 
+        path="/sales-targets" 
+        element={
+          <ProtectedRoute requiredRoles={['admin', 'manager', 'executive']}>
+            <SalesTargetsPage />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="/quotes" element={<Quotes />} />
       <Route path="/quotes/create" element={<CreateQuote />} />
       <Route path="/tasks" element={<Tasks />} />
-      <Route path="/reports" element={<Reports />} />
+      <Route 
+        path="/reports" 
+        element={
+          <ProtectedRoute requiredRoles={['admin', 'manager', 'executive']}>
+            <Reports />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="/settings" element={<Settings />} />
-      <Route path="/automation" element={<Automation />} />
-      <Route path="/system-settings/*" element={<SystemSettings />} />
+      <Route 
+        path="/automation" 
+        element={
+          <ProtectedRoute requiredRoles={['admin']}>
+            <Automation />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/system-settings/*" 
+        element={
+          <ProtectedRoute requiredRoles={['admin']}>
+            <SystemSettings />
+          </ProtectedRoute>
+        } 
+      />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

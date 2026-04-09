@@ -84,21 +84,38 @@ export default function App() {
   }));
   const handleLogout = useLogout();
 
-  // Sync with token if store is fresh but data exists in localStorage
+  // Unified Security Guard: Sync auth state with server on load
   useEffect(() => {
-    if (!isAuthenticated) {
-      const token = localStorage.getItem('crm_token');
-      const userStr = localStorage.getItem('crm_user');
-      if (token && userStr) {
-        try {
-          const user = JSON.parse(userStr);
-          setAuth(user, token);
-        } catch (e) {
-          console.error('Failed to restore auth', e);
+    async function syncAuth() {
+      const activeToken = localStorage.getItem('crm_token');
+      if (!activeToken) return;
+
+      try {
+        console.log('DIAGNOSTIC: Validating token:', activeToken);
+        const response = await fetch('/api/auth/validate', {
+          headers: { 
+            'Authorization': `Bearer ${activeToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.valid && data.user) {
+            // Success: Overwrite store with verified server data
+            setAuth(data.user, activeToken);
+          }
+        } else if (response.status === 401) {
+          // Failure: Token is invalid or spoofed. Auto-logout.
+          console.warn('Security Alert: Invalid session detected. Logging out...');
+          handleLogout();
         }
+      } catch (e) {
+        console.error('Initial auth sync connection error', e);
       }
     }
-  }, [isAuthenticated, setAuth]);
+    syncAuth();
+  }, []); // Run ONLY once on app boot
 
   return (
     <ThemeProvider>

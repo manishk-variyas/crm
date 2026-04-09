@@ -4,16 +4,7 @@
  */
 import React from 'react';
 import { Button } from '@crm/ui';
-
-function getStoredUser(): { name: string; role: string } | null {
-  const userStr = localStorage.getItem('crm_user');
-  if (!userStr) return null;
-  try {
-    return JSON.parse(userStr);
-  } catch {
-    return null;
-  }
-}
+import { getStoredUser } from '../lib/auth';
 
 export function PageHeader() {
   const user = getStoredUser();

@@ -514,7 +514,7 @@
       "endpoint": "/api/auth/validate",
       "responses": [
         {
-          "uuid": "cd0d520d-a3ae-46e2-afa1-f686939e3a57",
+          "uuid": "diagnostic-uuid",
           "body": "{\"valid\":true,\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Management\"}}",
           "headers": [
             {
@@ -527,135 +527,11 @@
             }
           ],
           "statusCode": 200,
-          "label": "Admin Token",
-          "rules": [
-            {
-              "target": "header",
-              "value": "Bearer admin-token",
-              "operator": "equals",
-              "modifier": "",
-              "invert": false
-            }
-          ],
+          "label": "Diagnostic Success",
+          "rules": [],
           "default": true,
           "latency": 0,
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "6119adc5-4c89-484f-88b5-681715ef5d7f",
-          "body": "{\"valid\":true,\"user\":{\"id\":\"2\",\"email\":\"manager@crm.com\",\"name\":\"Sarah Jenkins\",\"role\":\"manager\",\"department\":\"Sales\"}}",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            }
-          ],
-          "statusCode": 200,
-          "label": "Manager Token",
-          "rules": [
-            {
-              "target": "header",
-              "value": "Bearer manager-token",
-              "operator": "equals",
-              "modifier": "",
-              "invert": false
-            }
-          ],
-          "default": false,
-          "latency": 0,
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "977ebb28-c792-4e16-884b-c949447ce7e8",
-          "body": "{\"valid\":true,\"user\":{\"id\":\"3\",\"email\":\"rep@crm.com\",\"name\":\"John Doe\",\"role\":\"sales_rep\",\"department\":\"Sales\"}}",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            }
-          ],
-          "statusCode": 200,
-          "label": "Rep Token",
-          "rules": [
-            {
-              "target": "header",
-              "value": "Bearer rep-token",
-              "operator": "equals",
-              "modifier": "",
-              "invert": false
-            }
-          ],
-          "default": false,
-          "latency": 0,
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "e225dd3a-85f9-4b4a-bf3e-3e3679ee2e7b",
-          "body": "{\"valid\":true,\"user\":{\"id\":\"4\",\"email\":\"exec@crm.com\",\"name\":\"Marcus Vane\",\"role\":\"executive\",\"department\":\"Executive\"}}",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            }
-          ],
-          "statusCode": 200,
-          "label": "Exec Token",
-          "rules": [
-            {
-              "target": "header",
-              "value": "Bearer exec-token",
-              "operator": "equals",
-              "modifier": "",
-              "invert": false
-            }
-          ],
-          "default": false,
-          "latency": 0,
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "crudKey": "id",
-          "callbacks": []
+          "bodyType": "INLINE"
         }
       ],
       "type": "http",

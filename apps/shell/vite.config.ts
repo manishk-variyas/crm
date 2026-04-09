@@ -37,6 +37,55 @@ export default defineConfig(({ mode }) => {
           recharts: { singleton: true, requiredVersion: '^3.0.0' },
         },
       }),
+      {
+        name: 'mock-auth-validate',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            if (req.url === '/api/auth/validate') {
+              const auth = req.headers.authorization || '';
+              let user = null;
+              if (auth.includes('admin-token')) user = { id: '1', email: 'admin@crm.com', name: 'Alex Morgan', role: 'admin', department: 'Management' };
+              else if (auth.includes('manager-token')) user = { id: '2', email: 'manager@crm.com', name: 'Sarah Jenkins', role: 'manager', department: 'Sales' };
+              else if (auth.includes('rep-token')) user = { id: '3', email: 'rep@crm.com', name: 'John Doe', role: 'sales_rep', department: 'Sales' };
+              else if (auth.includes('exec-token')) user = { id: '4', email: 'exec@crm.com', name: 'Marcus Vane', role: 'executive', department: 'Executive' };
+
+              res.setHeader('Content-Type', 'application/json');
+              if (user) {
+                res.statusCode = 200;
+                res.end(JSON.stringify({ valid: true, user }));
+              } else {
+                res.statusCode = 401;
+                res.end(JSON.stringify({ valid: false, message: 'Invalid token' }));
+              }
+              return;
+            }
+            next();
+          });
+        },
+        configurePreviewServer(server) {
+          server.middlewares.use((req, res, next) => {
+            if (req.url === '/api/auth/validate') {
+              const auth = req.headers.authorization || '';
+              let user = null;
+              if (auth.includes('admin-token')) user = { id: '1', email: 'admin@crm.com', name: 'Alex Morgan', role: 'admin', department: 'Management' };
+              else if (auth.includes('manager-token')) user = { id: '2', email: 'manager@crm.com', name: 'Sarah Jenkins', role: 'manager', department: 'Sales' };
+              else if (auth.includes('rep-token')) user = { id: '3', email: 'rep@crm.com', name: 'John Doe', role: 'sales_rep', department: 'Sales' };
+              else if (auth.includes('exec-token')) user = { id: '4', email: 'exec@crm.com', name: 'Marcus Vane', role: 'executive', department: 'Executive' };
+
+              res.setHeader('Content-Type', 'application/json');
+              if (user) {
+                res.statusCode = 200;
+                res.end(JSON.stringify({ valid: true, user }));
+              } else {
+                res.statusCode = 401;
+                res.end(JSON.stringify({ valid: false, message: 'Invalid token' }));
+              }
+              return;
+            }
+            next();
+          });
+        }
+      }
     ],
     server: {
       port: 3000,

@@ -35,19 +35,22 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
     sidebarOpen, 
     setSidebarOpen, 
     toggleSidebar,
-    user: storeUser
+    user: storeUser,
+    token
   } = useStore((state: RootStore) => ({
     sidebarOpen: state.sidebarOpen,
     setSidebarOpen: state.setSidebarOpen,
     toggleSidebar: state.toggleSidebar,
     user: state.user,
+    token: state.token
   }));
-
   const user = storeUser || {
     name: "Guest User",
     role: "Visitor",
     avatarUrl: "https://api.dicebear.com/7.x/notionists/svg?seed=Guest"
   };
+
+  const currentRole = user.role.toLowerCase();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -68,7 +71,7 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
   ];
 
   const filteredMenuItems = menuItems.filter(item => 
-    !item.requiredRoles || item.requiredRoles.includes(user.role)
+    !item.requiredRoles || item.requiredRoles.map(r => r.toLowerCase()).includes(currentRole)
   );
 
   const activeItem = menuItems.find(item => location.pathname.startsWith(item.value!))?.value || '/dashboard';
@@ -127,10 +130,10 @@ export function Layout({ children, onLogout }: { children: React.ReactNode; onLo
           onSearchClick={() => setIsSearchOpen(true)}
           notificationCount={1}
           onMenuClick={() => setIsMobileOpen(true)}
-          rightElement={
+          leftElement={
             <button
               onClick={toggleSidebar}
-              className="hidden lg:flex p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors mr-1"
+              className="hidden lg:flex p-2 -ml-2 text-muted-foreground hover:bg-muted rounded-full transition-colors mr-1"
               title={!sidebarOpen ? "Expand Sidebar" : "Collapse Sidebar"}
             >
               {!sidebarOpen ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}

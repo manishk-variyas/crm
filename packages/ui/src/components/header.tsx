@@ -19,6 +19,7 @@ export interface HeaderProps {
   notificationCount?: number;
   onNotificationClick?: () => void;
   onHelpClick?: () => void;
+  leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
 }
 
@@ -33,11 +34,13 @@ export const Header: React.FC<HeaderProps> = ({
   notificationCount = 0,
   onNotificationClick,
   onHelpClick,
+  leftElement,
   rightElement
 }) => {
   return (
     <header className={cn("flex items-center justify-between h-16 px-6 bg-background border-b border-border/50 shrink-0", className)}>
       <div className="flex items-center gap-4 flex-1 min-w-0">
+        {leftElement}
         {onMenuClick && (
           <button 
             onClick={onMenuClick}
