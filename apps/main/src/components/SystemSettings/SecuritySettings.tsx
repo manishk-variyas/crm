@@ -61,7 +61,7 @@ function ToggleCard({ icon, title, description, isEnabled, onToggle }: ToggleCar
         onClick={onToggle}
         className={cn(
           "w-12 h-6 rounded-full transition-all duration-300 relative",
-          isEnabled ? "bg-[#4F46E5]" : "bg-muted"
+          isEnabled ? "bg-primary" : "bg-muted"
         )}
       >
         <div className={cn(

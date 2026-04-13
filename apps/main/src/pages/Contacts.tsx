@@ -23,6 +23,7 @@ import {
 import { Button, Badge, cn, PageHeader, DataTable, Column, Modal, SortOption, FilterConfig, PageActions, FormInput, FormSelect, FormTextarea, ExportOptionsModal } from '@crm/ui';
 import { ContactModal, ContactDetailModal } from '../components/Contacts/modals';
 import { useContacts } from '../services/hooks';
+import { exportToCSV, exportToExcel, exportToPDF, ExportColumn } from '@crm/utils';
 
 interface Contact {
   id: string;
@@ -205,6 +206,27 @@ export function Contacts() {
       setSelectedIds([]);
     } else {
       setSelectedIds(filteredData.map(contact => contact.id));
+    }
+  };
+
+  const handleExport = (format: 'excel' | 'csv' | 'pdf') => {
+    const selectedData = contacts.filter(c => selectedIds.includes(c.id));
+    const exportColumns: ExportColumn[] = [
+      { header: 'Full Name', key: 'name' },
+      { header: 'Title', key: 'title' },
+      { header: 'Account', key: 'account' },
+      { header: 'Role', key: 'role' },
+      { header: 'Email', key: 'email' },
+      { header: 'Phone', key: 'phone' },
+      { header: 'Last Activity', key: 'lastActivity' }
+    ];
+
+    if (format === 'csv') {
+      exportToCSV(selectedData, exportColumns, 'contacts_export');
+    } else if (format === 'excel') {
+      exportToExcel(selectedData, exportColumns, 'contacts_export');
+    } else if (format === 'pdf') {
+      exportToPDF(selectedData, exportColumns, 'Customer Contacts Directory');
     }
   };
 
@@ -448,6 +470,7 @@ export function Contacts() {
       <ExportOptionsModal 
         isOpen={isExportModalOpen} 
         onClose={() => setIsExportModalOpen(false)} 
+        onExport={handleExport}
       />
     </div>
   );

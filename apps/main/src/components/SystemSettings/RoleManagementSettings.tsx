@@ -58,7 +58,7 @@ export function RoleManagementSettings() {
           <h3 className="text-lg font-bold text-foreground">Role Management</h3>
           <p className="text-sm text-muted-foreground mt-0.5">Manage user roles and permissions.</p>
         </div>
-        <Button className="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-5 rounded-lg flex items-center gap-2 font-bold text-xs h-10 shadow-sm transition-all active:scale-95">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-5 rounded-lg flex items-center gap-2 font-bold text-xs h-10 shadow-sm transition-all active:scale-95">
           <Plus className="w-4 h-4" /> Add Role
         </Button>
       </div>

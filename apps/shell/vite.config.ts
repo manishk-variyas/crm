@@ -115,7 +115,7 @@ export default defineConfig(({ mode }) => {
       cssCodeSplit: false,
     },
     preview: {
-          "host":"0.0.0.0",
+      host:"0.0.0.0",
       port: 3000,
       strictPort: false,
       proxy: {

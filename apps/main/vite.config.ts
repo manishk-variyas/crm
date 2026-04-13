@@ -43,7 +43,7 @@ export default defineConfig({
     cssCodeSplit: false,
   },
   preview: {
-    "host":"0.0.0.0",
+   host:"0.0.0.0",
     port: 3001,
     strictPort: false,
     cors: true,

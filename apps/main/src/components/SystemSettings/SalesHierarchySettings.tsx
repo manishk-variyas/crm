@@ -54,7 +54,7 @@ export function SalesHierarchySettings() {
           <Button variant="outline" className="flex items-center gap-2 text-xs font-bold h-10 border-border/60">
             <GitBranch className="w-3.5 h-3.5" /> Re-index Hierarchy
           </Button>
-          <Button className="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-5 rounded-lg flex items-center gap-2 font-bold text-xs h-10 shadow-sm transition-all active:scale-95">
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-5 rounded-lg flex items-center gap-2 font-bold text-xs h-10 shadow-sm transition-all active:scale-95">
             <Plus className="w-4 h-4" /> Add Hierarchy Node
           </Button>
         </div>

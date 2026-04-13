@@ -34,7 +34,7 @@ export function IntegrationSettings() {
                 <div className="text-[11px] text-muted-foreground font-medium mt-0.5">{item.status}</div>
               </div>
             </div>
-            <button className="text-[11px] font-black text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-widest px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg">
+            <button className="text-[11px] font-black text-primary hover:text-primary/80 transition-colors uppercase tracking-widest px-4 py-2 hover:bg-primary/5 rounded-lg border border-transparent hover:border-primary/10">
               Connect
             </button>
           </div>

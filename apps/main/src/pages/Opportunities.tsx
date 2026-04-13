@@ -21,6 +21,7 @@ import {
 import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, StatusBadge, getStatusVariant, PageActions, ExportOptionsModal, FormInput } from '@crm/ui';
 import { OpportunityModal, OpportunityQuickViewModal } from '../components/Opportunities/modals';
 import { useOpportunities } from '../services/hooks';
+import { exportToCSV, exportToExcel, exportToPDF, ExportColumn } from '@crm/utils';
 
 interface Opportunity {
   id: string;
@@ -258,6 +259,30 @@ export function Opportunities() {
       setSelectedIds([]);
     } else {
       setSelectedIds(filteredData.map(opp => opp.id));
+    }
+  };
+
+  const handleExport = (format: 'excel' | 'csv' | 'pdf') => {
+    const selectedData = opportunities.filter(opp => selectedIds.includes(opp.id));
+    const exportColumns: ExportColumn[] = [
+      { header: 'Opportunity ID', key: 'oppId' },
+      { header: 'Title', key: 'name' },
+      { header: 'Subtitle', key: 'subTitle' },
+      { header: 'Account', key: 'account' },
+      { header: 'Amount', key: 'amount' },
+      { header: 'Stage', key: 'stage' },
+      { header: 'Expected Closure', key: 'expectedClosure' },
+      { header: 'Last Contact', key: 'lastContact' },
+      { header: 'Created On', key: 'createdOn' },
+      { header: 'Owner', key: 'owner' }
+    ];
+
+    if (format === 'csv') {
+      exportToCSV(selectedData, exportColumns, 'opportunities_export');
+    } else if (format === 'excel') {
+      exportToExcel(selectedData, exportColumns, 'opportunities_export');
+    } else if (format === 'pdf') {
+      exportToPDF(selectedData, exportColumns, 'Opportunities Pipeline Report');
     }
   };
 
@@ -539,6 +564,7 @@ export function Opportunities() {
       <ExportOptionsModal
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
+        onExport={handleExport}
       />
     </div>
   );

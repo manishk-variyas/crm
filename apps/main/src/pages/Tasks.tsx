@@ -19,8 +19,9 @@ import {
   X,
   RefreshCw
 } from 'lucide-react';
-import { Button, Badge, cn, PageHeader, DataTable, Column, PageActions, Modal, FormInput, FormSelect, FormTextarea } from '@crm/ui';
+import { Button, Badge, cn, PageHeader, DataTable, Column, PageActions, Modal, FormInput, FormSelect, FormTextarea, ExportOptionsModal } from '@crm/ui';
 import { useTasks } from '../services/hooks';
+import { exportToCSV, exportToExcel, exportToPDF, ExportColumn } from '@crm/utils';
 
 interface Task {
   id: string;
@@ -103,9 +104,33 @@ export function Tasks() {
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [alphabetLetter, setAlphabetLetter] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const tasksData = tasks.length > 0 ? tasks : TASKS;
+
+  const handleExport = (format: 'excel' | 'csv' | 'pdf') => {
+    const selectedData = tasksData.filter(task => selectedIds.includes(task.id));
+    const exportColumns: ExportColumn[] = [
+      { header: 'Subject', key: 'subject' },
+      { header: 'Description', key: 'description' },
+      { header: 'Due Date', key: 'dueDate' },
+      { header: 'Priority', key: 'priority' },
+      { header: 'Status', key: 'status' },
+      { header: 'Related To', key: 'relatedTo' },
+      { header: 'Related Type', key: 'relatedType' },
+      { header: 'Owner', key: 'ownerName' }
+    ];
+
+    if (format === 'csv') {
+      exportToCSV(selectedData, exportColumns, 'tasks_export');
+    } else if (format === 'excel') {
+      exportToExcel(selectedData, exportColumns, 'tasks_export');
+    } else if (format === 'pdf') {
+      exportToPDF(selectedData, exportColumns, 'Tasks Status Report');
+    }
+  };
 
   const filteredData = tasksData.filter((task) => {
     const matchesSearch = !searchTerm ||
@@ -128,9 +153,35 @@ export function Tasks() {
 
   const columns: Column<Task>[] = [
     {
-      header: '',
+      header: (
+        <input 
+          type="checkbox" 
+          checked={selectedIds.length === filteredData.length && filteredData.length > 0}
+          onChange={(e) => {
+            e.stopPropagation();
+            if (selectedIds.length === filteredData.length) {
+              setSelectedIds([]);
+            } else {
+              setSelectedIds(filteredData.map(t => t.id));
+            }
+          }}
+          className="rounded border-border text-primary focus:ring-primary bg-background cursor-pointer" 
+        />
+      ),
       headerClassName: 'w-12',
-      render: () => <input type="checkbox" className="rounded border-border text-primary focus:ring-primary bg-background" />
+      render: (task) => (
+        <input 
+          type="checkbox" 
+          checked={selectedIds.includes(task.id)}
+          onChange={(e) => {
+            e.stopPropagation();
+            setSelectedIds(prev => 
+              prev.includes(task.id) ? prev.filter(id => id !== task.id) : [...prev, task.id]
+            );
+          }}
+          className="rounded border-border text-primary focus:ring-primary bg-background cursor-pointer" 
+        />
+      )
     },
     {
       header: 'Subject',
@@ -258,7 +309,13 @@ export function Tasks() {
                   icon: <CalendarIcon className="w-4 h-4" />, 
                   onClick: () => setView('calendar'),
                 },
-                { label: 'Export', variant: 'outline', icon: <Share2 className="w-4 h-4" />, onClick: () => {} },
+                { 
+                  label: 'Export', 
+                  variant: 'outline', 
+                  icon: <Share2 className="w-4 h-4" />, 
+                  onClick: () => setIsExportModalOpen(true),
+                  disabled: selectedIds.length === 0
+                },
                 { label: 'Add Task', variant: 'primary', icon: <Plus className="w-4 h-4" />, onClick: () => setIsAddModalOpen(true) }
               ]}
             />
@@ -302,6 +359,12 @@ export function Tasks() {
           }} 
         />
       )}
+
+      <ExportOptionsModal 
+        isOpen={isExportModalOpen} 
+        onClose={() => setIsExportModalOpen(false)} 
+        onExport={handleExport}
+      />
     </div>
   );
 }

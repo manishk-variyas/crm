@@ -19,7 +19,7 @@ export function GeneralSettings() {
       <QuoteConfigSection />
 
       <div className="flex justify-end pt-8">
-        <Button className="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-8 h-12 rounded-xl font-bold text-xs shadow-lg shadow-[#4F46E5]/20 flex items-center gap-2 transition-all active:scale-95">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 rounded-xl font-bold text-xs shadow-lg shadow-primary/20 flex items-center gap-2 transition-all active:scale-95">
           <Save className="w-4 h-4" /> Save Settings
         </Button>
       </div>

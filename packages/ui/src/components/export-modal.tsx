@@ -6,6 +6,7 @@ import { cn } from '../lib/utils';
 export interface ExportOptionsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onExport: (format: 'excel' | 'csv' | 'pdf') => void;
   title?: string;
   description?: string;
 }
@@ -13,10 +14,11 @@ export interface ExportOptionsModalProps {
 export function ExportOptionsModal({ 
   isOpen, 
   onClose, 
+  onExport,
   title = "Export Options",
   description = "Select the format you want to export the selected items as:"
 }: ExportOptionsModalProps) {
-  const exportFormats = [
+  const exportFormats: { id: 'excel' | 'csv' | 'pdf', title: string, description: string, icon: React.ReactNode, iconBg: string }[] = [
     {
       id: 'excel',
       title: 'Excel Worksheet',
@@ -56,7 +58,10 @@ export function ExportOptionsModal({
           {exportFormats.map((format) => (
             <button
               key={format.id}
-              onClick={onClose}
+              onClick={() => {
+                onExport(format.id);
+                onClose();
+              }}
               className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-muted/30 transition-all group text-left"
             >
               <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", format.iconBg)}>

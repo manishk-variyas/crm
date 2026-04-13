@@ -514,7 +514,7 @@
       "endpoint": "/api/auth/validate",
       "responses": [
         {
-          "uuid": "diagnostic-uuid",
+          "uuid": "951c7fd9-9fcb-46ca-87fd-c89b5f3da4b9",
           "body": "{\"valid\":true,\"user\":{\"id\":\"1\",\"email\":\"admin@crm.com\",\"name\":\"Alex Morgan\",\"role\":\"admin\",\"department\":\"Management\"}}",
           "headers": [
             {
@@ -531,7 +531,15 @@
           "rules": [],
           "default": true,
           "latency": 0,
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "type": "http",

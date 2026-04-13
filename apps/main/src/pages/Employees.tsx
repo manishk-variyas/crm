@@ -13,6 +13,7 @@ import {
 import { Download } from 'lucide-react';
 import { Button, cn, PageHeader, DataTable, Column, PageActions, ExportOptionsModal } from '@crm/ui';
 import { useEmployees } from '../services/hooks';
+import { exportToCSV, exportToExcel, exportToPDF, ExportColumn } from '@crm/utils';
 
 interface Employee {
   id: string;
@@ -136,6 +137,28 @@ export function Employees() {
       setSelectedIds([]);
     } else {
       setSelectedIds(filteredData.map(emp => emp.id));
+    }
+  };
+
+  const handleExport = (format: 'excel' | 'csv' | 'pdf') => {
+    const selectedData = employeesData.filter(emp => selectedIds.includes(emp.id));
+    const exportColumns: ExportColumn[] = [
+      { header: 'Full Name', key: 'name' },
+      { header: 'Role', key: 'role' },
+      { header: 'Department', key: 'department' },
+      { header: 'Sub-Department', key: 'subDepartment' },
+      { header: 'Email', key: 'email' },
+      { header: 'Phone', key: 'phone' },
+      { header: 'Location', key: 'location' },
+      { header: 'Desk', key: 'desk' }
+    ];
+
+    if (format === 'csv') {
+      exportToCSV(selectedData, exportColumns, 'employees_export');
+    } else if (format === 'excel') {
+      exportToExcel(selectedData, exportColumns, 'employees_export');
+    } else if (format === 'pdf') {
+      exportToPDF(selectedData, exportColumns, 'Employee Directory Report');
     }
   };
 
@@ -312,6 +335,7 @@ export function Employees() {
       <ExportOptionsModal 
         isOpen={isExportModalOpen} 
         onClose={() => setIsExportModalOpen(false)} 
+        onExport={handleExport}
       />
     </div>
   );

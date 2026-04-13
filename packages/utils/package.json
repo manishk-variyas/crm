@@ -9,7 +9,14 @@
     "react": "^18.0.0"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.5.2",
     "@types/react": "^18.2.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
+    "papaparse": "^5.5.3",
+    "xlsx": "^0.18.5"
   }
 }

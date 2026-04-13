@@ -29,6 +29,7 @@ import {
 import { Button, Badge, cn, PageHeader, Column, DataTable, SortOption, FilterConfig, Modal, StatusBadge, getStatusVariant, PageActions, FormInput, FormSelect, FormTextarea, Tabs, ExportOptionsModal } from '@crm/ui';
 import { AccountModal, AccountDetailModal, OwnerProfileModal } from '../components/Accounts/modals';
 import { useAccounts } from '../services/hooks';
+import { exportToCSV, exportToExcel, exportToPDF, ExportColumn } from '@crm/utils';
 
 interface Account {
   id: string;
@@ -260,6 +261,27 @@ export function Accounts() {
       setSelectedIds([]);
     } else {
       setSelectedIds(filteredData.map(account => account.id));
+    }
+  };
+
+  const handleExport = (format: 'excel' | 'csv' | 'pdf') => {
+    const selectedData = accounts.filter(acc => selectedIds.includes(acc.id));
+    const exportColumns: ExportColumn[] = [
+      { header: 'Company Name', key: 'name' },
+      { header: 'Website', key: 'website' },
+      { header: 'Owner', key: 'owner' },
+      { header: 'Industry', key: 'industry' },
+      { header: 'Status', key: 'status' },
+      { header: 'Revenue', key: 'revenue' },
+      { header: 'Last Activity', key: 'lastActivity' }
+    ];
+
+    if (format === 'csv') {
+      exportToCSV(selectedData, exportColumns, 'accounts_export');
+    } else if (format === 'excel') {
+      exportToExcel(selectedData, exportColumns, 'accounts_export');
+    } else if (format === 'pdf') {
+      exportToPDF(selectedData, exportColumns, 'Accounts Report');
     }
   };
 
@@ -525,6 +547,7 @@ export function Accounts() {
       <ExportOptionsModal 
         isOpen={isExportModalOpen} 
         onClose={() => setIsExportModalOpen(false)} 
+        onExport={handleExport}
       />
     </div>
   );
